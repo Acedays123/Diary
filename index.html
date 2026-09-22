@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -250,7 +249,6 @@
   </div>
 
   <div style="display:flex; justify-content:flex-end; gap:4px; margin-top:4px;">
-    <button class="btn-sm" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;" onclick="clearSiteData()">🗑️ Сброс памяти</button>
     <button class="btn-sm" onclick="exportData()">💾 Скачать бэкап</button>
     <button class="btn-sm" onclick="importData()">📂 Загрузить бэкап</button>
     <input type="file" id="importInput" style="display:none" onchange="processImport(event)">
@@ -284,16 +282,6 @@
 
   const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
   const dayHeaders = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-
-  function clearSiteData() {
-    if (confirm("Вы уверены, что хотите полностью сбросить память сайта?")) {
-      localStorage.clear();
-      db = JSON.parse(JSON.stringify(DEFAULT_DB));
-      saveData();
-      renderSeasons();
-      alert("Память очищена!");
-    }
-  }
 
   const resizer = document.getElementById('dragResizer');
   const leftPanel = document.getElementById('leftPanel');
