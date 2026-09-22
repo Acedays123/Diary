@@ -3,69 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Электронный Дневник</title>
+  <title>Умный Дневник & Планировщик</title>
   <style>
     :root {
-      --bg: #f2f4f7;
-      --card-bg: #ffffff;
+      --bg: #f4f5f8;
+      --card: #ffffff;
       --text: #1c1c1e;
       --subtext: #8e8e93;
       --primary: #007aff;
-      --primary-light: #e5f1ff;
-      --danger: #ff3b30;
       --border: #e5e5ea;
       --radius: 14px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding: 20px 10px; display: flex; justify-content: center; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
+    body { background: var(--bg); color: var(--text); padding: 20px 10px; display: flex; justify-content: center; }
     
-    .app { width: 100%; max-width: 800px; display: flex; flex-direction: column; gap: 16px; }
+    .app { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 16px; }
 
-    /* Переключатель режимов */
-    .segmented-control { display: flex; background: #e3e3e8; padding: 4px; border-radius: 12px; }
-    .segment-btn { flex: 1; padding: 10px; text-align: center; border: none; background: transparent; font-weight: 600; font-size: 14px; color: var(--subtext); border-radius: 9px; cursor: pointer; transition: 0.2s; }
-    .segment-btn.active { background: #ffffff; color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    /* Хлебные крошки / Навигация */
+    .breadcrumbs { display: flex; align-items: center; gap: 8px; background: var(--card); padding: 12px 18px; border-radius: var(--radius); border: 1px solid var(--border); }
+    .crumb { font-weight: 600; font-size: 15px; color: var(--subtext); cursor: pointer; transition: 0.2s; }
+    .crumb.active { color: var(--primary); }
+    .crumb:hover { color: var(--text); }
+    .separator { color: var(--subtext); font-size: 12px; }
 
-    /* Главные карточки */
-    .card { background: var(--card-bg); border-radius: var(--radius); padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid var(--border); }
+    /* Карточки контента */
+    .card { background: var(--card); border-radius: var(--radius); padding: 20px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
 
-    /* Компактный календарь недели */
-    .week-bar { display: flex; justify-content: space-between; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
-    .week-day { flex: 1; min-width: 45px; text-align: center; padding: 10px 4px; border-radius: 10px; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
-    .week-day .day-name { font-size: 11px; color: var(--subtext); font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
-    .week-day .day-num { font-size: 16px; font-weight: 700; }
-    .week-day:hover { background: #f0f0f5; }
-    .week-day.active { background: var(--primary); color: white; }
-    .week-day.active .day-name { color: rgba(255,255,255,0.8); }
+    /* 1. Вид Года (Сетка 12 месяцев) */
+    .months-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+    .month-box { background: #fafafa; border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; font-weight: 700; cursor: pointer; position: relative; transition: 0.2s; }
+    .month-box:hover { border-color: var(--primary); background: #f0f7ff; }
+    .month-box.selected { border: 2px solid var(--primary); background: #e5f1ff; }
 
-    /* Карточка урока */
-    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .title { font-size: 20px; font-weight: 700; }
+    /* 2. Вид Месяца (Сетка дней) */
+    .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; }
+    .day-head { font-weight: 700; font-size: 12px; color: var(--subtext); padding-bottom: 6px; }
+    .day-box { background: #fafafa; border: 1px solid var(--border); border-radius: 8px; padding: 12px 4px; font-weight: 600; font-size: 14px; cursor: pointer; position: relative; }
+    .day-box:hover { border-color: var(--primary); }
+    .day-box.selected { border: 2px solid var(--primary); background: #e5f1ff; }
 
-    .lesson-item { display: grid; grid-template-columns: 28px 1.5fr 1fr 2fr 70px 32px; gap: 8px; align-items: center; background: #f9f9fb; padding: 10px 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid var(--border); }
-    .lesson-num { font-weight: 700; color: var(--subtext); font-size: 13px; text-align: center; }
+    /* Метки и цвета на блоках */
+    .tag-label { position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); font-size: 9px; font-weight: 800; color: white; padding: 1px 5px; border-radius: 4px; max-width: 90%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    input { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; background: white; outline: none; transition: 0.2s; }
-    input:focus { border-color: var(--primary); }
+    /* 3. Вид Дня (Уроки + Заметки) */
+    .day-view { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; }
+    .lesson-row { display: grid; grid-template-columns: 24px 1fr 1fr 60px 28px; gap: 6px; align-items: center; margin-bottom: 8px; }
+    input, textarea { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; background: white; }
+    input:focus, textarea:focus { border-color: var(--primary); }
+    textarea { height: 160px; resize: none; font-family: inherit; }
 
-    /* Кнопки */
-    .btn-icon { background: transparent; border: none; color: var(--subtext); cursor: pointer; font-size: 16px; padding: 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
-    .btn-icon:hover { color: var(--danger); background: #ffe5e5; }
-    .btn-add { width: 100%; padding: 12px; background: var(--primary-light); color: var(--primary); border: none; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; margin-top: 8px; transition: 0.2s; }
-    .btn-add:hover { background: #d0e4ff; }
+    .btn { padding: 8px 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; }
+    .btn-danger { background: #ff3b30; }
 
-    /* Успеваемость */
-    .stats-row { display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; }
-    .badge { background: var(--primary); color: white; padding: 4px 10px; border-radius: 20px; font-size: 14px; }
+    /* Легенда цветов */
+    .legend-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 4px 8px; background: #fafafa; border-radius: 6px; border: 1px solid var(--border); }
+    .color-dot { width: 12px; height: 12px; border-radius: 3px; }
 
-    /* Фильтры и инструменты */
-    .footer-tools { display: flex; justify-content: space-between; font-size: 12px; color: var(--subtext); margin-top: 10px; }
-    .text-btn { background: none; border: none; color: var(--subtext); cursor: pointer; font-size: 12px; text-decoration: underline; }
+    /* Экранное выделение мышыю */
+    .selection-controls { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
 
-    @media (max-width: 650px) {
-      .lesson-item { grid-template-columns: 1fr; gap: 6px; }
-      .lesson-num { text-align: left; }
+    @media (max-width: 700px) {
+      .day-view { grid-template-columns: 1fr; }
+      .lesson-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -73,238 +74,282 @@
 
 <div class="app">
 
-  <!-- Шапка с переключателем -->
-  <div class="segmented-control">
-    <button class="segment-btn active" id="btnModeCalendar" onclick="setMode('calendar')">📅 Дневник</button>
-    <button class="segment-btn" id="btnModeTemplate" onclick="setMode('template')">⚙️ Шаблон Недели</button>
+  <!-- Навигационные крошки -->
+  <div class="breadcrumbs">
+    <span class="crumb active" onclick="navTo('year')">🗓️ 2026 год</span>
+    <span class="separator" id="sep1" style="display:none;">➔</span>
+    <span class="crumb" id="crumbMonth" style="display:none;" onclick="navTo('month')">Сентябрь</span>
+    <span class="separator" id="sep2" style="display:none;">➔</span>
+    <span class="crumb" id="crumbDay" style="display:none;">22 Сентября</span>
   </div>
 
-  <!-- Недельный Календарь (для Дневника) -->
-  <div class="card" id="weekBarCard">
-    <div class="week-bar" id="weekBar"></div>
+  <!-- УРОВЕНЬ 1: ГОД (Месяцы) -->
+  <div class="card" id="viewYear">
+    <div class="selection-controls">
+      <span style="font-size:13px; font-weight:600; color:var(--subtext);">Зажми мышь или нажимай карточки для выделения:</span>
+      <button class="btn" onclick="colorizeSelected('month')">🎨 Окрасить выбранные месяца</button>
+    </div>
+    <div class="months-grid" id="monthsContainer"></div>
   </div>
 
-  <!-- Выбор дня недели (для Шаблона) -->
-  <div class="card" id="templateDaysCard" style="display: none;">
-    <div class="week-bar" id="templateWeekBar"></div>
+  <!-- УРОВЕНЬ 2: МЕСЯЦ (Дни) -->
+  <div class="card" id="viewMonth" style="display:none;">
+    <div class="selection-controls">
+      <span style="font-size:13px; font-weight:600; color:var(--subtext);">Выдели дни для группы:</span>
+      <button class="btn" onclick="colorizeSelected('day')">🎨 Окрасить выбранные дни</button>
+    </div>
+    <div class="days-grid" id="daysContainer"></div>
   </div>
 
-  <!-- Основная карточка урока -->
+  <!-- УРОВЕНЬ 3: ДЕНЬ (Расписание + Заметки в стиле StudyHub) -->
+  <div class="card" id="viewDay" style="display:none;">
+    <div class="day-view">
+      <!-- Левая колонка: Уроки -->
+      <div>
+        <h3 style="margin-bottom:12px;">📚 Расписание урока</h3>
+        <div id="lessonsList"></div>
+        <button class="btn" style="width:100%; margin-top:8px;" onclick="addLesson()">+ Добавить урок</button>
+      </div>
+      <!-- Правая колонка: Заметки -->
+      <div>
+        <h3 style="margin-bottom:12px;">📝 Заметки дня</h3>
+        <textarea id="dayNotes" placeholder="Напиши важные задачи, напоминания или заметки..." oninput="saveNotes()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Панель Легенды Цветов & Резервное сохранение -->
   <div class="card">
-    <div class="header-row">
-      <div class="title" id="displayTitle">Понедельник</div>
-      <div id="statBadge" class="badge">0.00</div>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h4 style="font-size:14px;">🏷️ Легенда ваших меток</h4>
+      <div>
+        <button class="btn" style="background:#6b7280; font-size:11px;" onclick="exportData()">💾 Экспорт бэкапа</button>
+        <button class="btn" style="background:#6b7280; font-size:11px;" onclick="importData()">📂 Импорт</button>
+        <input type="file" id="fileInput" style="display:none;" onchange="readBackup(event)">
+      </div>
     </div>
-
-    <div id="lessonsList"></div>
-
-    <button class="btn-add" onclick="addLesson()">+ Добавить урок</button>
-  </div>
-
-  <!-- Панель управления данными -->
-  <div class="footer-tools">
-    <span>Данные сохраняются автоматически</span>
-    <div>
-      <button class="text-btn" onclick="exportBackup()">Экспорт</button> | 
-      <button class="text-btn" onclick="importBackup()">Импорт</button>
-      <input type="file" id="fileInput" style="display:none" onchange="readBackup(event)">
-    </div>
+    <div class="legend-bar" id="legendContainer"></div>
   </div>
 
 </div>
 
 <script>
-  let mode = 'calendar'; // 'calendar' или 'template'
-  let currentDate = new Date();
-  let selectedDateStr = formatDate(new Date());
-  let selectedTemplateDay = 1; // 1 = Пн
+  let currentLevel = 'year'; // 'year', 'month', 'day'
+  let selectedYear = 2026;
+  let selectedMonth = 8; // 0-11
+  let selectedDay = 22;
 
-  // Хранилище данных
-  let db = JSON.parse(localStorage.getItem('my_clean_diary')) || {
-    template: { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 0: [] },
-    days: {}
+  let selectedItems = new Set();
+  let isMouseDown = false;
+
+  // База данных
+  let db = JSON.parse(localStorage.getItem('my_hierarchy_diary')) || {
+    monthsData: {}, // "2026-8": { color: "#ff3b30", label: "Летние каникулы" }
+    daysData: {},   // "2026-8-22": { color: "#007aff", label: "Экзамен" }
+    lessons: {},    // "2026-8-22": [ { title, info, mark } ]
+    notes: {},      // "2026-8-22": "Заметка..."
+    legend: {}      // "#ff3b30": "Летние каникулы"
   };
 
-  const dayNames = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
-  const fullDayNames = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
+  const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+  const weekHeadings = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 
-  function formatDate(d) {
-    let month = '' + (d.getMonth() + 1);
-    let day = '' + d.getDate();
-    let year = d.getFullYear();
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-    return [year, month, day].join('-');
+  document.addEventListener('mouseup', () => isMouseDown = false);
+
+  function navTo(level) {
+    currentLevel = level;
+    selectedItems.clear();
+
+    document.getElementById('viewYear').style.display = level === 'year' ? 'block' : 'none';
+    document.getElementById('viewMonth').style.display = level === 'month' ? 'block' : 'none';
+    document.getElementById('viewDay').style.display = level === 'day' ? 'block' : 'none';
+
+    document.getElementById('sep1').style.display = level !== 'year' ? 'inline' : 'none';
+    document.getElementById('crumbMonth').style.display = level !== 'year' ? 'inline' : 'none';
+    document.getElementById('sep2').style.display = level === 'day' ? 'inline' : 'none';
+    document.getElementById('crumbDay').style.display = level === 'day' ? 'inline' : 'none';
+
+    if (level === 'year') renderYearView();
+    if (level === 'month') renderMonthView();
+    if (level === 'day') renderDayView();
+
+    renderLegend();
   }
 
-  function setMode(newMode) {
-    mode = newMode;
-    document.getElementById('btnModeCalendar').className = mode === 'calendar' ? 'segment-btn active' : 'segment-btn';
-    document.getElementById('btnModeTemplate').className = mode === 'template' ? 'segment-btn active' : 'segment-btn';
+  /* 1. РЕНДЕР ГОДА */
+  function renderYearView() {
+    const container = document.getElementById('monthsContainer');
+    container.innerHTML = '';
 
-    document.getElementById('weekBarCard').style.display = mode === 'calendar' ? 'block' : 'none';
-    document.getElementById('templateDaysCard').style.display = mode === 'template' ? 'block' : 'none';
+    monthNames.forEach((mName, idx) => {
+      const key = `${selectedYear}-${idx}`;
+      const mData = db.monthsData[key] || {};
+      const colorStyle = mData.color ? `background-color: ${mData.color}; color: white;` : '';
 
-    if (mode === 'calendar') {
-      renderWeekBar();
-      loadDay(selectedDateStr);
-    } else {
-      renderTemplateWeekBar();
-      loadTemplateDay(selectedTemplateDay);
-    }
-  }
-
-  /* Отрисовка текущей недели */
-  function renderWeekBar() {
-    const bar = document.getElementById('weekBar');
-    bar.innerHTML = '';
-
-    const curr = new Date(selectedDateStr);
-    const first = curr.getDate() - curr.getDay() + 1; // Понедельник недели
-
-    for (let i = 0; i < 7; i++) {
-      const day = new Date(curr.setDate(first + i));
-      const dateStr = formatDate(day);
-      const isSelected = dateStr === selectedDateStr ? 'active' : '';
-
-      bar.innerHTML += `
-        <div class="week-day ${isSelected}" onclick="selectDate('${dateStr}')">
-          <div class="day-name">${dayNames[day.getDay()]}</div>
-          <div class="day-num">${day.getDate()}</div>
-        </div>
+      const box = document.createElement('div');
+      box.className = 'month-box';
+      box.style.cssText = colorStyle;
+      box.innerHTML = `
+        ${mName}
+        ${mData.label ? `<div class="tag-label" style="background:${mData.color}">${mData.label}</div>` : ''}
       `;
-    }
-  }
 
-  /* Отрисовка шаблона по дням недели */
-  function renderTemplateWeekBar() {
-    const bar = document.getElementById('templateWeekBar');
-    bar.innerHTML = '';
+      box.onmousedown = () => { isMouseDown = true; toggleSelection(idx, box); };
+      box.onmouseenter = () => { if (isMouseDown) toggleSelection(idx, box); };
+      box.onclick = () => { if (!isMouseDown) openMonth(idx); };
 
-    const daysOrder = [1, 2, 3, 4, 5, 6, 0];
-    daysOrder.forEach(dNum => {
-      const isSelected = dNum === selectedTemplateDay ? 'active' : '';
-      bar.innerHTML += `
-        <div class="week-day ${isSelected}" onclick="selectTemplateDay(${dNum})">
-          <div class="day-name">${dayNames[dNum]}</div>
-        </div>
-      `;
+      container.appendChild(box);
     });
   }
 
-  function selectDate(dateStr) {
-    selectedDateStr = dateStr;
-    renderWeekBar();
-    loadDay(dateStr);
+  function openMonth(idx) {
+    selectedMonth = idx;
+    document.getElementById('crumbMonth').innerText = monthNames[idx];
+    navTo('month');
   }
 
-  function selectTemplateDay(dNum) {
-    selectedTemplateDay = dNum;
-    renderTemplateWeekBar();
-    loadTemplateDay(dNum);
-  }
+  /* 2. РЕНДЕР МЕСЯЦА */
+  function renderMonthView() {
+    const container = document.getElementById('daysContainer');
+    container.innerHTML = '';
 
-  function getLessons() {
-    if (mode === 'template') {
-      return db.template[selectedTemplateDay] || [];
-    } else {
-      if (db.days[selectedDateStr]) {
-        return db.days[selectedDateStr];
-      }
-      const dayOfWeek = new Date(selectedDateStr).getDay();
-      return db.template[dayOfWeek] || [];
+    weekHeadings.forEach(h => container.innerHTML += `<div class="day-head">${h}</div>`);
+
+    const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
+    const firstDayIndex = (new Date(selectedYear, selectedMonth, 1).getDay() + 6) % 7;
+
+    for (let i = 0; i < firstDayIndex; i++) container.innerHTML += `<div></div>`;
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const key = `${selectedYear}-${selectedMonth}-${day}`;
+      const dData = db.daysData[key] || {};
+      const colorStyle = dData.color ? `background-color: ${dData.color}; color: white;` : '';
+
+      const box = document.createElement('div');
+      box.className = 'day-box';
+      box.style.cssText = colorStyle;
+      box.innerHTML = `
+        ${day}
+        ${dData.label ? `<div class="tag-label" style="background:${dData.color}">${dData.label}</div>` : ''}
+      `;
+
+      box.onmousedown = () => { isMouseDown = true; toggleSelection(day, box); };
+      box.onmouseenter = () => { if (isMouseDown) toggleSelection(day, box); };
+      box.onclick = () => openDay(day);
+
+      container.appendChild(box);
     }
   }
 
-  function loadDay(dateStr) {
-    const d = new Date(dateStr);
-    document.getElementById('displayTitle').innerText = `${selectedDateStr} (${fullDayNames[d.getDay()]})`;
-    renderLessons();
+  function openDay(day) {
+    selectedDay = day;
+    document.getElementById('crumbDay').innerText = `${day} ${monthNames[selectedMonth]}`;
+    navTo('day');
   }
 
-  function loadTemplateDay(dNum) {
-    document.getElementById('displayTitle').innerText = `Шаблон: ${fullDayNames[dNum]}`;
-    renderLessons();
-  }
-
-  function renderLessons() {
+  /* 3. РЕНДЕР ДНЯ */
+  function renderDayView() {
+    const key = `${selectedYear}-${selectedMonth}-${selectedDay}`;
+    const lessons = db.lessons[key] || [];
     const container = document.getElementById('lessonsList');
     container.innerHTML = '';
-    const lessons = getLessons();
-
-    if (lessons.length === 0) {
-      container.innerHTML = `<p style="color: var(--subtext); text-align: center; padding: 20px;">Уроков нет</p>`;
-    }
 
     lessons.forEach((l, idx) => {
       container.innerHTML += `
-        <div class="lesson-item">
-          <span class="lesson-num">#${idx + 1}</span>
+        <div class="lesson-row">
+          <span style="font-weight:700;">#${idx + 1}</span>
           <input type="text" value="${l.title || ''}" placeholder="Предмет" onchange="updateLesson(${idx}, 'title', this.value)">
-          <input type="text" value="${l.info || ''}" placeholder="Кабинет / Время" onchange="updateLesson(${idx}, 'info', this.value)">
-          <input type="text" value="${l.hw || ''}" placeholder="Домашнее задание" onchange="updateLesson(${idx}, 'hw', this.value)">
+          <input type="text" value="${l.info || ''}" placeholder="Кабинет" onchange="updateLesson(${idx}, 'info', this.value)">
           <input type="text" value="${l.mark || ''}" placeholder="Оценка" onchange="updateLesson(${idx}, 'mark', this.value)">
-          <button class="btn-icon" onclick="deleteLesson(${idx})">✕</button>
+          <button class="btn btn-danger" style="padding:4px;" onclick="deleteLesson(${idx})">✕</button>
         </div>
       `;
     });
 
-    calculateAvg();
+    document.getElementById('dayNotes').value = db.notes[key] || '';
   }
 
-  function makeCustomIfNeeded() {
-    if (mode === 'calendar' && !db.days[selectedDateStr]) {
-      const dayOfWeek = new Date(selectedDateStr).getDay();
-      db.days[selectedDateStr] = JSON.parse(JSON.stringify(db.template[dayOfWeek] || []));
+  function toggleSelection(item, el) {
+    if (selectedItems.has(item)) {
+      selectedItems.delete(item);
+      el.classList.remove('selected');
+    } else {
+      selectedItems.add(item);
+      el.classList.add('selected');
     }
   }
 
-  function addLesson() {
-    makeCustomIfNeeded();
-    const target = mode === 'template' ? db.template[selectedTemplateDay] : db.days[selectedDateStr];
-    target.push({ title: '', info: '', hw: '', mark: '' });
+  function colorizeSelected(type) {
+    if (selectedItems.size === 0) return alert("Сначала выделите элементы мышкой!");
+
+    const color = prompt("Введите цвет в HEX (например #ff3b30 - красный, #10b981 - зеленый, #007aff - синий):", "#007aff");
+    if (!color) return;
+    const label = prompt("Введите название выделения (например, 'Каникулы', 'Семестр', 'Экзамен'):", "Метка");
+
+    selectedItems.forEach(item => {
+      const key = type === 'month' ? `${selectedYear}-${item}` : `${selectedYear}-${selectedMonth}-${item}`;
+      const targetObj = type === 'month' ? db.monthsData : db.daysData;
+      targetObj[key] = { color, label };
+    });
+
+    if (label) db.legend[color] = label;
+
     save();
+    navTo(currentLevel);
+  }
+
+  function addLesson() {
+    const key = `${selectedYear}-${selectedMonth}-${selectedDay}`;
+    if (!db.lessons[key]) db.lessons[key] = [];
+    db.lessons[key].push({ title: '', info: '', mark: '' });
+    save();
+    renderDayView();
   }
 
   function updateLesson(idx, field, val) {
-    makeCustomIfNeeded();
-    const target = mode === 'template' ? db.template[selectedTemplateDay] : db.days[selectedDateStr];
-    target[idx][field] = val;
+    const key = `${selectedYear}-${selectedMonth}-${selectedDay}`;
+    db.lessons[key][idx][field] = val;
     save();
   }
 
   function deleteLesson(idx) {
-    makeCustomIfNeeded();
-    const target = mode === 'template' ? db.template[selectedTemplateDay] : db.days[selectedDateStr];
-    target.splice(idx, 1);
+    const key = `${selectedYear}-${selectedMonth}-${selectedDay}`;
+    db.lessons[key].splice(idx, 1);
+    save();
+    renderDayView();
+  }
+
+  function saveNotes() {
+    const key = `${selectedYear}-${selectedMonth}-${selectedDay}`;
+    db.notes[key] = document.getElementById('dayNotes').value;
     save();
   }
 
-  function save() {
-    localStorage.setItem('my_clean_diary', JSON.stringify(db));
-    renderLessons();
-  }
-
-  function calculateAvg() {
-    let marks = [];
-    Object.values(db.days).forEach(day => {
-      day.forEach(l => {
-        const m = parseFloat(l.mark);
-        if (!isNaN(m)) marks.push(m);
-      });
+  function renderLegend() {
+    const container = document.getElementById('legendContainer');
+    container.innerHTML = '';
+    Object.keys(db.legend).forEach(color => {
+      container.innerHTML += `
+        <div class="legend-item">
+          <div class="color-dot" style="background:${color}"></div>
+          <span>${db.legend[color]}</span>
+        </div>
+      `;
     });
-    const avg = marks.length ? (marks.reduce((a, b) => a + b, 0) / marks.length).toFixed(2) : '0.00';
-    document.getElementById('statBadge').innerText = `Средний балл: ${avg}`;
   }
 
-  function exportBackup() {
+  function save() {
+    localStorage.setItem('my_hierarchy_diary', JSON.stringify(db));
+  }
+
+  function exportData() {
     const a = document.createElement('a');
     a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
     a.download = `diary_backup.json`;
     a.click();
   }
 
-  function importBackup() { document.getElementById('fileInput').click(); }
+  function importData() { document.getElementById('fileInput').click(); }
 
   function readBackup(e) {
     const file = e.target.files[0];
@@ -313,11 +358,12 @@
     r.onload = function(e) {
       db = JSON.parse(e.target.result);
       save();
+      navTo('year');
     };
     r.readAsText(file);
   }
 
-  setMode('calendar');
+  navTo('year');
 </script>
 
 </body>
