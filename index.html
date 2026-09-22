@@ -7,18 +7,18 @@
   <style>
     :root {
       --bg: #f0f2f5;
-      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-bg: rgba(255, 255, 255, 0.92);
       --text: #1c1c1e;
       --subtext: #6c757d;
       --primary: #4f46e5;
       --primary-hover: #4338ca;
-      --border: rgba(226, 232, 240, 0.8);
-      --radius: 14px;
+      --border: rgba(226, 232, 240, 0.85);
+      --radius: 12px;
       --danger: #ef4444;
 
-      --month-min-height: 65px;
-      --day-min-height: 42px;
-      --font-scale: 12px;
+      --month-min-height: 52px;
+      --day-min-height: 36px;
+      --font-scale: 11px;
 
       --winter-bg: linear-gradient(135deg, rgba(224,242,254,0.85) 0%, rgba(186,230,253,0.85) 100%);
       --spring-bg: linear-gradient(135deg, rgba(220,252,231,0.85) 0%, rgba(134,239,172,0.85) 100%);
@@ -34,81 +34,83 @@
       background-position: center; 
       background-attachment: fixed;
       color: var(--text); 
-      padding: 20px; 
+      padding: 14px; 
       display: flex; 
       justify-content: center; 
       min-height: 100vh;
     }
     
-    .app { width: 100%; max-width: 1300px; display: flex; flex-direction: column; gap: 14px; }
+    .app { width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 10px; }
 
     /* Переключатель Режимов */
-    .mode-bar { display: flex; background: rgba(226, 232, 240, 0.85); backdrop-filter: blur(8px); padding: 3px; border-radius: 10px; max-width: 380px; margin: 0 auto; width: 100%; }
-    .mode-btn { flex: 1; padding: 6px 12px; border: none; background: transparent; font-weight: 600; font-size: 12px; color: var(--subtext); border-radius: 8px; cursor: pointer; transition: 0.2s; text-align: center; }
-    .mode-btn.active { background: #ffffff; color: var(--text); box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
+    .mode-bar { display: flex; background: rgba(226, 232, 240, 0.85); backdrop-filter: blur(8px); padding: 3px; border-radius: 10px; max-width: 340px; margin: 0 auto; width: 100%; }
+    .mode-btn { flex: 1; padding: 5px 10px; border: none; background: transparent; font-weight: 600; font-size: 12px; color: var(--subtext); border-radius: 8px; cursor: pointer; transition: 0.2s; text-align: center; }
+    .mode-btn.active { background: #ffffff; color: var(--text); box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
 
-    /* Навигация года */
-    .year-nav-bar { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); backdrop-filter: blur(10px); padding: 10px 16px; border-radius: var(--radius); border: 1px solid var(--border); }
-    .year-title { font-size: 18px; font-weight: 800; color: var(--primary); }
+    /* Компактный Навигатор Года */
+    .year-nav-bar { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); backdrop-filter: blur(10px); padding: 6px 14px; border-radius: var(--radius); border: 1px solid var(--border); }
+    
+    .year-switch-group { display: flex; align-items: center; gap: 8px; }
+    .year-title { font-size: 16px; font-weight: 800; color: var(--primary); min-width: 80px; text-align: center; }
 
-    .search-input { padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; width: 200px; outline: none; background: rgba(255,255,255,0.8); }
+    .search-input { padding: 5px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; width: 180px; outline: none; background: rgba(255,255,255,0.8); }
 
     /* Двупанельная структура */
-    .layout-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 14px; }
-    .panel { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: var(--radius); padding: 16px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+    .layout-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 10px; }
+    .panel { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: var(--radius); padding: 12px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
 
     /* Компактные кнопки управления */
-    .btn-sm { padding: 4px 8px; font-size: 11px; font-weight: 600; border-radius: 6px; border: 1px solid var(--border); background: rgba(248, 250, 252, 0.9); cursor: pointer; transition: 0.2s; }
+    .btn-sm { padding: 3px 8px; font-size: 11px; font-weight: 600; border-radius: 6px; border: 1px solid var(--border); background: rgba(248, 250, 252, 0.9); cursor: pointer; transition: 0.2s; }
     .btn-sm:hover { background: #e2e8f0; }
 
     .scale-controls { display: flex; gap: 2px; align-items: center; }
 
     /* Сезонная Сетка */
-    .seasons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-    .season-column { display: flex; flex-direction: column; gap: 6px; }
-    .season-header { font-size: 11px; font-weight: 700; text-align: center; padding: 4px; border-radius: 6px; text-transform: uppercase; }
+    .seasons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .season-column { display: flex; flex-direction: column; gap: 5px; }
+    .season-header { font-size: 10px; font-weight: 700; text-align: center; padding: 3px; border-radius: 5px; text-transform: uppercase; }
     
     .season-winter { background: var(--winter-bg); color: #0369a1; }
     .season-spring { background: var(--spring-bg); color: #15803d; }
     .season-summer { background: var(--summer-bg); color: #a16207; }
     .season-autumn { background: var(--autumn-bg); color: #c2410c; }
 
-    .month-card { min-height: var(--month-min-height); background: rgba(255, 255, 255, 0.95); border: 1px solid var(--border); border-radius: 8px; padding: 6px; text-align: center; font-weight: 700; font-size: var(--font-scale); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: 0.15s; }
-    .month-card:hover { transform: translateY(-2px); border-color: var(--primary); }
+    .month-card { min-height: var(--month-min-height); background: rgba(255, 255, 255, 0.95); border: 1px solid var(--border); border-radius: 6px; padding: 4px; text-align: center; font-weight: 700; font-size: var(--font-scale); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: 0.15s; }
+    .month-card:hover { transform: translateY(-1px); border-color: var(--primary); }
 
     /* Сетка дней */
-    .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+    .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center; }
     .day-head { font-size: 10px; font-weight: 700; color: var(--subtext); padding-bottom: 2px; }
-    .day-card { min-height: var(--day-min-height); background: rgba(250, 250, 250, 0.95); border: 1px solid var(--border); border-radius: 6px; padding: 3px; font-weight: 600; font-size: var(--font-scale); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: 0.15s; }
+    .day-card { min-height: var(--day-min-height); background: rgba(250, 250, 250, 0.95); border: 1px solid var(--border); border-radius: 5px; padding: 2px; font-weight: 600; font-size: var(--font-scale); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: 0.15s; }
     .day-card:hover { border-color: var(--primary); }
     .day-card.active-day { outline: 2px solid var(--primary); }
 
     .fill-label { font-size: 8px; font-weight: 800; background: rgba(0,0,0,0.35); color: white; padding: 1px 3px; border-radius: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     /* Вкладки Шаблона */
-    .template-tabs { display: flex; gap: 4px; overflow-x: auto; margin-bottom: 10px; }
-    .t-btn { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; background: rgba(248, 250, 252, 0.9); font-weight: 600; font-size: 11px; cursor: pointer; }
+    .template-tabs { display: flex; gap: 4px; overflow-x: auto; margin-bottom: 8px; }
+    .t-btn { padding: 3px 8px; border: 1px solid var(--border); border-radius: 5px; background: rgba(248, 250, 252, 0.9); font-weight: 600; font-size: 11px; cursor: pointer; }
     .t-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
     /* Урок */
-    .lesson-row { display: grid; grid-template-columns: 20px 1fr 1fr 48px 55px 24px; gap: 4px; align-items: center; margin-bottom: 6px; }
-    input, select, textarea { width: 100%; padding: 6px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; outline: none; background: rgba(255,255,255,0.9); }
-    textarea { height: 70px; resize: none; margin-top: 4px; }
+    .lesson-row { display: grid; grid-template-columns: 18px 1fr 1fr 45px 50px 22px; gap: 4px; align-items: center; margin-bottom: 5px; }
+    input, select, textarea { width: 100%; padding: 5px; border: 1px solid var(--border); border-radius: 5px; font-size: 11px; outline: none; background: rgba(255,255,255,0.9); }
+    textarea { height: 60px; resize: none; margin-top: 4px; }
 
-    .btn { padding: 6px 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: pointer; }
-    .btn-danger { background: var(--danger); padding: 3px; }
+    .btn { padding: 5px 10px; background: var(--primary); color: white; border: none; border-radius: 5px; font-weight: 600; font-size: 11px; cursor: pointer; }
+    .btn-danger { background: var(--danger); padding: 2px; }
     .btn-success { background: #10b981; }
 
-    .semesters-bar { display: flex; gap: 6px; margin-top: 8px; border-top: 1px solid var(--border); padding-top: 8px; }
-    .sem-card { flex: 1; background: rgba(248, 250, 252, 0.9); padding: 6px; border-radius: 6px; border: 1px solid var(--border); text-align: center; font-size: 11px; }
+    .semesters-bar { display: flex; gap: 6px; margin-top: 6px; border-top: 1px solid var(--border); padding-top: 6px; }
+    .sem-card { flex: 1; background: rgba(248, 250, 252, 0.9); padding: 4px; border-radius: 5px; border: 1px solid var(--border); text-align: center; font-size: 10px; }
 
-    .legend-bar { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-    .legend-tag { padding: 2px 6px; border-radius: 10px; font-size: 10px; color: white; font-weight: 700; }
+    .legend-bar { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+    .legend-tag { padding: 2px 6px; border-radius: 8px; font-size: 10px; color: white; font-weight: 700; }
 
     .color-picker-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); justify-content: center; align-items: center; z-index: 100; }
-    .color-picker-card { background: white; padding: 16px; border-radius: 12px; width: 280px; display: flex; flex-direction: column; gap: 10px; }
+    .color-picker-card { background: white; padding: 14px; border-radius: 12px; width: 260px; display: flex; flex-direction: column; gap: 8px; }
     .color-options { display: flex; gap: 6px; justify-content: center; }
-    .color-circle { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+    .color-circle { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
     .color-circle.selected { border-color: #000; scale: 1.1; }
 
     .selected-highlight { outline: 2px solid var(--primary) !important; }
@@ -129,17 +131,20 @@
     <button class="mode-btn" id="btnModeTemplate" onclick="switchMainMode('template')">⚙️ Шаблон</button>
   </div>
 
-  <!-- Навигатор года и выбор фона -->
+  <!-- Компактная Панель года и поиска -->
   <div class="year-nav-bar">
-    <button class="btn-sm" onclick="changeYear(-1)">← Год</button>
-    <div class="year-title" id="displayYearTitle">2026 Год</div>
+    <div class="year-switch-group">
+      <button class="btn-sm" onclick="changeYear(-1)">‹</button>
+      <div class="year-title" id="displayYearTitle">2026 Год</div>
+      <button class="btn-sm" onclick="changeYear(1)">›</button>
+    </div>
+
     <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск..." oninput="handleSearch()">
     
     <div style="display:flex; gap:4px;">
       <button class="btn-sm" onclick="document.getElementById('bgFileInput').click()">🖼️ Фон</button>
       <button class="btn-sm" onclick="removeBackground()" title="Сбросить фон">✕</button>
       <input type="file" id="bgFileInput" accept="image/*" style="display:none" onchange="uploadBackground(event)">
-      <button class="btn-sm" onclick="changeYear(1)">Год →</button>
     </div>
   </div>
 
@@ -148,8 +153,8 @@
     
     <!-- Левая панель: Календарь -->
     <div class="panel">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <h3 id="leftPanelTitle" style="font-size:14px;">Сезоны года</h3>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <h3 id="leftPanelTitle" style="font-size:13px;">Сезоны года</h3>
         <div style="display:flex; gap:4px; align-items:center;">
           <div class="scale-controls">
             <button class="btn-sm" onclick="adjustScale(-1)">−</button>
@@ -166,8 +171,8 @@
       <div id="daysView" class="days-grid" style="display:none;"></div>
 
       <!-- Сноски -->
-      <div style="margin-top:12px; border-top:1px solid var(--border); padding-top:6px;">
-        <h4 style="font-size:11px; color:var(--subtext);">🏷️ Сноски и цвета:</h4>
+      <div style="margin-top:8px; border-top:1px solid var(--border); padding-top:4px;">
+        <h4 style="font-size:10px; color:var(--subtext);">🏷️ Сноски и цвета:</h4>
         <div class="legend-bar" id="legendContainer"></div>
       </div>
     </div>
@@ -176,25 +181,25 @@
     <div class="panel">
       <!-- Дневник -->
       <div id="rightDayView">
-        <h3 id="rightPanelTitle" style="margin-bottom:10px; font-size:14px;">Выберите день</h3>
+        <h3 id="rightPanelTitle" style="margin-bottom:8px; font-size:13px;">Выберите день</h3>
         
         <div id="dayDetailContent" style="display:none;">
-          <h4 style="font-size:12px;">📚 Уроки</h4>
-          <div id="lessonsList" style="margin-top:6px;"></div>
-          <button class="btn" style="width:100%; margin-top:6px;" onclick="addLesson()">+ Добавить урок</button>
+          <h4 style="font-size:11px;">📚 Уроки</h4>
+          <div id="lessonsList" style="margin-top:4px;"></div>
+          <button class="btn" style="width:100%; margin-top:4px;" onclick="addLesson()">+ Добавить урок</button>
 
-          <h4 style="margin-top:10px; font-size:12px;">📝 Заметки</h4>
+          <h4 style="margin-top:8px; font-size:11px;">📝 Заметки</h4>
           <textarea id="dayNotes" placeholder="Заметки..." oninput="saveNotes()"></textarea>
 
           <!-- Успеваемость -->
-          <div style="margin-top:10px; border-top:1px solid var(--border); padding-top:6px;">
-            <h4 style="font-size:12px;">📊 Средний балл</h4>
+          <div style="margin-top:8px; border-top:1px solid var(--border); padding-top:4px;">
+            <h4 style="font-size:11px;">📊 Средний балл</h4>
             <div class="semesters-bar">
               <div class="sem-card">1 Сем: <b id="sem1Avg">0.00</b></div>
               <div class="sem-card">2 Сем: <b id="sem2Avg">0.00</b></div>
               <div class="sem-card" style="background:#e0e7ff;">Год: <b id="totalAvg">0.00</b></div>
             </div>
-            <div id="subjectStats" style="font-size:11px; margin-top:6px;"></div>
+            <div id="subjectStats" style="font-size:10px; margin-top:4px;"></div>
           </div>
         </div>
 
@@ -203,7 +208,7 @@
 
       <!-- Шаблон -->
       <div id="rightTemplateView" style="display:none;">
-        <h3 style="margin-bottom:8px; font-size:14px;">Редактор Шаблона</h3>
+        <h3 style="margin-bottom:6px; font-size:13px;">Редактор Шаблона</h3>
         
         <div class="template-tabs">
           <button class="t-btn active" onclick="selectTemplateDay(1)">Пн</button>
@@ -216,10 +221,10 @@
         </div>
 
         <div id="templateLessonsList"></div>
-        <button class="btn" style="width:100%; margin-top:6px;" onclick="addTemplateLesson()">+ Добавить урок в шаблон</button>
+        <button class="btn" style="width:100%; margin-top:4px;" onclick="addTemplateLesson()">+ Добавить урок в шаблон</button>
 
-        <div style="margin-top:12px; border-top:1px solid var(--border); padding-top:8px; display:flex; flex-direction:column; gap:4px;">
-          <label style="font-size:11px; font-weight:700;">Применить этот шаблон:</label>
+        <div style="margin-top:8px; border-top:1px solid var(--border); padding-top:6px; display:flex; flex-direction:column; gap:3px;">
+          <label style="font-size:10px; font-weight:700;">Применить этот шаблон:</label>
           <button class="btn btn-success" onclick="applyTemplateRule('all')">Ко всем неделям года</button>
           <button class="btn btn-success" onclick="applyTemplateRule('month')">К текущему месяцу</button>
           <button class="btn btn-success" onclick="applyTemplateRule('selection')">К выделенным дням / месяцам</button>
@@ -232,7 +237,7 @@
   <!-- Модальное окно цвета -->
   <div class="color-picker-modal" id="colorModal">
     <div class="color-picker-card">
-      <h4 style="text-align:center; font-size:13px;">Выберите цвет и сноску</h4>
+      <h4 style="text-align:center; font-size:12px;">Выберите цвет и сноску</h4>
       <div class="color-options">
         <div class="color-circle selected" style="background:#4f46e5" onclick="chooseColor('#4f46e5', this)"></div>
         <div class="color-circle" style="background:#10b981" onclick="chooseColor('#10b981', this)"></div>
@@ -242,7 +247,7 @@
         <div class="color-circle" style="background:#ec4899" onclick="chooseColor('#ec4899', this)"></div>
       </div>
       <input type="text" id="colorLabelInput" placeholder="Название (например, 1 Семестр)">
-      <div style="display:flex; gap:6px;">
+      <div style="display:flex; gap:4px;">
         <button class="btn" style="flex:1;" onclick="applyColorChoice()">Применить</button>
         <button class="btn" style="flex:1; background:#6c757d;" onclick="closeColorModal()">Отмена</button>
       </div>
@@ -250,7 +255,7 @@
   </div>
 
   <!-- Бэкапы -->
-  <div style="display:flex; justify-content:flex-end; gap:6px;">
+  <div style="display:flex; justify-content:flex-end; gap:4px;">
     <button class="btn-sm" onclick="exportData()">💾 Скачать бэкап</button>
     <button class="btn-sm" onclick="importData()">📂 Загрузить бэкап</button>
     <input type="file" id="importInput" style="display:none" onchange="processImport(event)">
@@ -271,7 +276,7 @@
   let selectedItems = new Set();
   let isDragging = false;
 
-  let db = JSON.parse(localStorage.getItem('my_perfect_diary_v6')) || {
+  let db = JSON.parse(localStorage.getItem('my_perfect_diary_v7')) || {
     template: { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 0: [] },
     months: {}, 
     days: {},   
@@ -285,7 +290,6 @@
 
   document.addEventListener('mouseup', () => isDragging = false);
 
-  // Кастомный фон
   function uploadBackground(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -312,17 +316,17 @@
     currentScale = Math.max(1, Math.min(3, currentScale + delta));
     const root = document.documentElement;
     if (currentScale === 1) {
-      root.style.setProperty('--month-min-height', '45px');
-      root.style.setProperty('--day-min-height', '32px');
-      root.style.setProperty('--font-scale', '10px');
+      root.style.setProperty('--month-min-height', '40px');
+      root.style.setProperty('--day-min-height', '28px');
+      root.style.setProperty('--font-scale', '9px');
     } else if (currentScale === 2) {
-      root.style.setProperty('--month-min-height', '65px');
-      root.style.setProperty('--day-min-height', '42px');
-      root.style.setProperty('--font-scale', '12px');
+      root.style.setProperty('--month-min-height', '52px');
+      root.style.setProperty('--day-min-height', '36px');
+      root.style.setProperty('--font-scale', '11px');
     } else {
-      root.style.setProperty('--month-min-height', '85px');
-      root.style.setProperty('--day-min-height', '52px');
-      root.style.setProperty('--font-scale', '13px');
+      root.style.setProperty('--month-min-height', '70px');
+      root.style.setProperty('--day-min-height', '46px');
+      root.style.setProperty('--font-scale', '12px');
     }
   }
 
@@ -659,27 +663,27 @@
 
     document.getElementById('dayDetailContent').style.display = 'none';
     container.style.display = 'block';
-    container.innerHTML = `<h4 style="margin-bottom:8px; font-size:12px;">🔍 Результаты для "${query}":</h4>`;
+    container.innerHTML = `<h4 style="margin-bottom:6px; font-size:11px;">🔍 Результаты для "${query}":</h4>`;
 
     let found = false;
     Object.keys(db.months).forEach(k => {
       if (db.months[k].label && db.months[k].label.toLowerCase().includes(query)) {
         found = true;
-        container.innerHTML += `<div style="padding:4px; background:rgba(240,243,255,0.9); margin-bottom:4px; border-radius:4px; font-size:11px;"><b>Месяц:</b> ${k} — ${db.months[k].label}</div>`;
+        container.innerHTML += `<div style="padding:4px; background:rgba(240,243,255,0.9); margin-bottom:4px; border-radius:4px; font-size:10px;"><b>Месяц:</b> ${k} — ${db.months[k].label}</div>`;
       }
     });
 
     Object.keys(db.days).forEach(k => {
       if (db.days[k].label && db.days[k].label.toLowerCase().includes(query)) {
         found = true;
-        container.innerHTML += `<div style="padding:4px; background:rgba(240,243,255,0.9); margin-bottom:4px; border-radius:4px; font-size:11px;"><b>День:</b> ${k} — ${db.days[k].label}</div>`;
+        container.innerHTML += `<div style="padding:4px; background:rgba(240,243,255,0.9); margin-bottom:4px; border-radius:4px; font-size:10px;"><b>День:</b> ${k} — ${db.days[k].label}</div>`;
       }
     });
 
-    if (!found) container.innerHTML += `<p style="color:var(--subtext); font-size:11px;">Ничего не найдено.</p>`;
+    if (!found) container.innerHTML += `<p style="color:var(--subtext); font-size:10px;">Ничего не найдено.</p>`;
   }
 
-  function saveData() { localStorage.setItem('my_perfect_diary_v6', JSON.stringify(db)); }
+  function saveData() { localStorage.setItem('my_perfect_diary_v7', JSON.stringify(db)); }
   function exportData() {
     const a = document.createElement('a');
     a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
