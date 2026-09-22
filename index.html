@@ -7,101 +7,111 @@
   <style>
     :root {
       --bg: #f0f2f5;
-      --card-bg: #ffffff;
+      --card-bg: rgba(255, 255, 255, 0.9);
       --text: #1c1c1e;
       --subtext: #6c757d;
       --primary: #4f46e5;
       --primary-hover: #4338ca;
-      --border: #e2e8f0;
+      --border: rgba(226, 232, 240, 0.8);
       --radius: 14px;
       --danger: #ef4444;
 
-      /* Размеры по умолчанию для масштабирования */
-      --month-min-height: 75px;
-      --day-min-height: 48px;
+      --month-min-height: 65px;
+      --day-min-height: 42px;
       --font-scale: 12px;
 
-      --winter-bg: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-      --spring-bg: linear-gradient(135deg, #dcfce7 0%, #86efac 100%);
-      --summer-bg: linear-gradient(135deg, #fef9c3 0%, #fde047 100%);
-      --autumn-bg: linear-gradient(135deg, #ffedd5 0%, #fdba74 100%);
+      --winter-bg: linear-gradient(135deg, rgba(224,242,254,0.85) 0%, rgba(186,230,253,0.85) 100%);
+      --spring-bg: linear-gradient(135deg, rgba(220,252,231,0.85) 0%, rgba(134,239,172,0.85) 100%);
+      --summer-bg: linear-gradient(135deg, rgba(254,249,195,0.85) 0%, rgba(253,224,71,0.85) 100%);
+      --autumn-bg: linear-gradient(135deg, rgba(255,237,213,0.85) 0%, rgba(253,186,116,0.85) 100%);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
-    body { background-color: var(--bg); color: var(--text); padding: 20px; display: flex; justify-content: center; }
     
-    .app { width: 100%; max-width: 1300px; display: flex; flex-direction: column; gap: 16px; }
+    body { 
+      background-color: var(--bg); 
+      background-size: cover; 
+      background-position: center; 
+      background-attachment: fixed;
+      color: var(--text); 
+      padding: 20px; 
+      display: flex; 
+      justify-content: center; 
+      min-height: 100vh;
+    }
+    
+    .app { width: 100%; max-width: 1300px; display: flex; flex-direction: column; gap: 14px; }
 
-    /* Режимы */
-    .mode-bar { display: flex; background: #e2e8f0; padding: 4px; border-radius: 12px; max-width: 420px; margin: 0 auto; width: 100%; }
-    .mode-btn { flex: 1; padding: 8px 16px; border: none; background: transparent; font-weight: 600; font-size: 13px; color: var(--subtext); border-radius: 9px; cursor: pointer; transition: 0.2s; text-align: center; }
-    .mode-btn.active { background: #ffffff; color: var(--text); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+    /* Переключатель Режимов */
+    .mode-bar { display: flex; background: rgba(226, 232, 240, 0.85); backdrop-filter: blur(8px); padding: 3px; border-radius: 10px; max-width: 380px; margin: 0 auto; width: 100%; }
+    .mode-btn { flex: 1; padding: 6px 12px; border: none; background: transparent; font-weight: 600; font-size: 12px; color: var(--subtext); border-radius: 8px; cursor: pointer; transition: 0.2s; text-align: center; }
+    .mode-btn.active { background: #ffffff; color: var(--text); box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
 
-    /* Навигатор года */
-    .year-nav-bar { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 12px 20px; border-radius: var(--radius); border: 1px solid var(--border); }
-    .year-title { font-size: 22px; font-weight: 800; color: var(--primary); }
+    /* Навигация года */
+    .year-nav-bar { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); backdrop-filter: blur(10px); padding: 10px 16px; border-radius: var(--radius); border: 1px solid var(--border); }
+    .year-title { font-size: 18px; font-weight: 800; color: var(--primary); }
 
-    .search-input { padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; width: 240px; outline: none; }
+    .search-input { padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; width: 200px; outline: none; background: rgba(255,255,255,0.8); }
 
     /* Двупанельная структура */
-    .layout-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; }
-    .panel { background: var(--card-bg); border-radius: var(--radius); padding: 20px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .layout-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 14px; }
+    .panel { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: var(--radius); padding: 16px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
 
-    /* Кнопки масштабирования */
-    .scale-controls { display: flex; gap: 4px; align-items: center; }
-    .scale-btn { padding: 2px 8px; border: 1px solid var(--border); border-radius: 6px; background: #f8fafc; cursor: pointer; font-weight: bold; font-size: 12px; }
+    /* Компактные кнопки управления */
+    .btn-sm { padding: 4px 8px; font-size: 11px; font-weight: 600; border-radius: 6px; border: 1px solid var(--border); background: rgba(248, 250, 252, 0.9); cursor: pointer; transition: 0.2s; }
+    .btn-sm:hover { background: #e2e8f0; }
+
+    .scale-controls { display: flex; gap: 2px; align-items: center; }
 
     /* Сезонная Сетка */
-    .seasons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-    .season-column { display: flex; flex-direction: column; gap: 8px; }
-    .season-header { font-size: 12px; font-weight: 700; text-align: center; padding: 6px; border-radius: 8px; text-transform: uppercase; }
+    .seasons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .season-column { display: flex; flex-direction: column; gap: 6px; }
+    .season-header { font-size: 11px; font-weight: 700; text-align: center; padding: 4px; border-radius: 6px; text-transform: uppercase; }
     
     .season-winter { background: var(--winter-bg); color: #0369a1; }
     .season-spring { background: var(--spring-bg); color: #15803d; }
     .season-summer { background: var(--summer-bg); color: #a16207; }
     .season-autumn { background: var(--autumn-bg); color: #c2410c; }
 
-    .month-card { min-height: var(--month-min-height); background: #ffffff; border: 1px solid var(--border); border-radius: 10px; padding: 8px; text-align: center; font-weight: 700; font-size: var(--font-scale); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: 0.15s; }
+    .month-card { min-height: var(--month-min-height); background: rgba(255, 255, 255, 0.95); border: 1px solid var(--border); border-radius: 8px; padding: 6px; text-align: center; font-weight: 700; font-size: var(--font-scale); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: 0.15s; }
     .month-card:hover { transform: translateY(-2px); border-color: var(--primary); }
 
     /* Сетка дней */
-    .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; }
-    .day-head { font-size: 11px; font-weight: 700; color: var(--subtext); padding-bottom: 4px; }
-    .day-card { min-height: var(--day-min-height); background: #fafafa; border: 1px solid var(--border); border-radius: 8px; padding: 4px; font-weight: 600; font-size: var(--font-scale); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: 0.15s; }
+    .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+    .day-head { font-size: 10px; font-weight: 700; color: var(--subtext); padding-bottom: 2px; }
+    .day-card { min-height: var(--day-min-height); background: rgba(250, 250, 250, 0.95); border: 1px solid var(--border); border-radius: 6px; padding: 3px; font-weight: 600; font-size: var(--font-scale); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: 0.15s; }
     .day-card:hover { border-color: var(--primary); }
     .day-card.active-day { outline: 2px solid var(--primary); }
 
-    .fill-label { font-size: 9px; font-weight: 800; background: rgba(0,0,0,0.3); color: white; padding: 1px 4px; border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .fill-label { font-size: 8px; font-weight: 800; background: rgba(0,0,0,0.35); color: white; padding: 1px 3px; border-radius: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* Готовая палитра цветов */
-    .color-picker-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); justify-content: center; align-items: center; z-index: 100; }
-    .color-picker-card { background: white; padding: 20px; border-radius: 14px; width: 320px; display: flex; flex-direction: column; gap: 12px; }
-    .color-options { display: flex; gap: 8px; justify-content: center; }
-    .color-circle { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
-    .color-circle.selected { border-color: #000; scale: 1.1; }
-
-    /* Табы Шаблона */
-    .template-tabs { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 12px; }
-    .t-btn { padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; font-weight: 600; font-size: 12px; cursor: pointer; }
+    /* Вкладки Шаблона */
+    .template-tabs { display: flex; gap: 4px; overflow-x: auto; margin-bottom: 10px; }
+    .t-btn { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; background: rgba(248, 250, 252, 0.9); font-weight: 600; font-size: 11px; cursor: pointer; }
     .t-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-    /* Строка Урока */
-    .lesson-row { display: grid; grid-template-columns: 24px 1fr 1fr 50px 70px 28px; gap: 6px; align-items: center; margin-bottom: 8px; }
-    input, select, textarea { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; outline: none; }
-    textarea { height: 80px; resize: none; margin-top: 6px; }
+    /* Урок */
+    .lesson-row { display: grid; grid-template-columns: 20px 1fr 1fr 48px 55px 24px; gap: 4px; align-items: center; margin-bottom: 6px; }
+    input, select, textarea { width: 100%; padding: 6px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; outline: none; background: rgba(255,255,255,0.9); }
+    textarea { height: 70px; resize: none; margin-top: 4px; }
 
-    .btn { padding: 8px 14px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer; }
-    .btn-danger { background: var(--danger); padding: 4px; }
+    .btn { padding: 6px 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: pointer; }
+    .btn-danger { background: var(--danger); padding: 3px; }
     .btn-success { background: #10b981; }
 
-    /* Табы семестров успеваемости */
-    .semesters-bar { display: flex; gap: 10px; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
-    .sem-card { flex: 1; background: #f8fafc; padding: 8px; border-radius: 8px; border: 1px solid var(--border); text-align: center; }
+    .semesters-bar { display: flex; gap: 6px; margin-top: 8px; border-top: 1px solid var(--border); padding-top: 8px; }
+    .sem-card { flex: 1; background: rgba(248, 250, 252, 0.9); padding: 6px; border-radius: 6px; border: 1px solid var(--border); text-align: center; font-size: 11px; }
 
-    .legend-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-    .legend-tag { padding: 3px 8px; border-radius: 12px; font-size: 11px; color: white; font-weight: 700; }
+    .legend-bar { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+    .legend-tag { padding: 2px 6px; border-radius: 10px; font-size: 10px; color: white; font-weight: 700; }
 
-    .selected-highlight { outline: 3px solid var(--primary) !important; }
+    .color-picker-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); justify-content: center; align-items: center; z-index: 100; }
+    .color-picker-card { background: white; padding: 16px; border-radius: 12px; width: 280px; display: flex; flex-direction: column; gap: 10px; }
+    .color-options { display: flex; gap: 6px; justify-content: center; }
+    .color-circle { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+    .color-circle.selected { border-color: #000; scale: 1.1; }
+
+    .selected-highlight { outline: 2px solid var(--primary) !important; }
 
     @media (max-width: 900px) {
       .seasons-grid { grid-template-columns: repeat(2, 1fr); }
@@ -119,12 +129,18 @@
     <button class="mode-btn" id="btnModeTemplate" onclick="switchMainMode('template')">⚙️ Шаблон</button>
   </div>
 
-  <!-- Панель года -->
+  <!-- Навигатор года и выбор фона -->
   <div class="year-nav-bar">
-    <button class="btn" onclick="changeYear(-1)">← Прошлый год</button>
+    <button class="btn-sm" onclick="changeYear(-1)">← Год</button>
     <div class="year-title" id="displayYearTitle">2026 Год</div>
-    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск (каникулы, математика...)" oninput="handleSearch()">
-    <button class="btn" onclick="changeYear(1)">Следующий год →</button>
+    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск..." oninput="handleSearch()">
+    
+    <div style="display:flex; gap:4px;">
+      <button class="btn-sm" onclick="document.getElementById('bgFileInput').click()">🖼️ Фон</button>
+      <button class="btn-sm" onclick="removeBackground()" title="Сбросить фон">✕</button>
+      <input type="file" id="bgFileInput" accept="image/*" style="display:none" onchange="uploadBackground(event)">
+      <button class="btn-sm" onclick="changeYear(1)">Год →</button>
+    </div>
   </div>
 
   <!-- Двупанельный Блок -->
@@ -132,16 +148,14 @@
     
     <!-- Левая панель: Календарь -->
     <div class="panel">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <h3 id="leftPanelTitle">Сезоны года</h3>
-        <div style="display:flex; gap:8px; align-items:center;">
-          <!-- Масштаб -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <h3 id="leftPanelTitle" style="font-size:14px;">Сезоны года</h3>
+        <div style="display:flex; gap:4px; align-items:center;">
           <div class="scale-controls">
-            <span style="font-size:11px; color:var(--subtext);">Вид:</span>
-            <button class="scale-btn" onclick="adjustScale(-1)">−</button>
-            <button class="scale-btn" onclick="adjustScale(1)">+</button>
+            <button class="btn-sm" onclick="adjustScale(-1)">−</button>
+            <button class="btn-sm" onclick="adjustScale(1)">+</button>
           </div>
-          <button class="btn" style="font-size:11px; padding:4px 8px;" onclick="openColorModal()">🎨 Заливка</button>
+          <button class="btn-sm" onclick="openColorModal()">🎨 Заливка</button>
         </div>
       </div>
 
@@ -152,8 +166,8 @@
       <div id="daysView" class="days-grid" style="display:none;"></div>
 
       <!-- Сноски -->
-      <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:10px;">
-        <h4 style="font-size:12px; color:var(--subtext);">🏷️ Ваши сноски и цвета:</h4>
+      <div style="margin-top:12px; border-top:1px solid var(--border); padding-top:6px;">
+        <h4 style="font-size:11px; color:var(--subtext);">🏷️ Сноски и цвета:</h4>
         <div class="legend-bar" id="legendContainer"></div>
       </div>
     </div>
@@ -162,34 +176,34 @@
     <div class="panel">
       <!-- Дневник -->
       <div id="rightDayView">
-        <h3 id="rightPanelTitle" style="margin-bottom:12px;">Выберите день</h3>
+        <h3 id="rightPanelTitle" style="margin-bottom:10px; font-size:14px;">Выберите день</h3>
         
         <div id="dayDetailContent" style="display:none;">
-          <h4>📚 Расписание уроков</h4>
-          <div id="lessonsList" style="margin-top:8px;"></div>
-          <button class="btn" style="width:100%; margin-top:8px;" onclick="addLesson()">+ Добавить урок</button>
+          <h4 style="font-size:12px;">📚 Уроки</h4>
+          <div id="lessonsList" style="margin-top:6px;"></div>
+          <button class="btn" style="width:100%; margin-top:6px;" onclick="addLesson()">+ Добавить урок</button>
 
-          <h4 style="margin-top:14px;">📝 Заметки дня</h4>
+          <h4 style="margin-top:10px; font-size:12px;">📝 Заметки</h4>
           <textarea id="dayNotes" placeholder="Заметки..." oninput="saveNotes()"></textarea>
 
-          <!-- Семестры и Успеваемость -->
-          <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:10px;">
-            <h4>📊 Успеваемость по Семестрам</h4>
+          <!-- Успеваемость -->
+          <div style="margin-top:10px; border-top:1px solid var(--border); padding-top:6px;">
+            <h4 style="font-size:12px;">📊 Средний балл</h4>
             <div class="semesters-bar">
-              <div class="sem-card">1 Семестр: <b id="sem1Avg">0.00</b></div>
-              <div class="sem-card">2 Семестр: <b id="sem2Avg">0.00</b></div>
-              <div class="sem-card" style="background:#e0e7ff;">Годовой балл: <b id="totalAvg">0.00</b></div>
+              <div class="sem-card">1 Сем: <b id="sem1Avg">0.00</b></div>
+              <div class="sem-card">2 Сем: <b id="sem2Avg">0.00</b></div>
+              <div class="sem-card" style="background:#e0e7ff;">Год: <b id="totalAvg">0.00</b></div>
             </div>
-            <div id="subjectStats" style="font-size:12px; margin-top:8px;"></div>
+            <div id="subjectStats" style="font-size:11px; margin-top:6px;"></div>
           </div>
         </div>
 
         <div id="searchResults" style="display:none;"></div>
       </div>
 
-      <!-- Режим Шаблона -->
+      <!-- Шаблон -->
       <div id="rightTemplateView" style="display:none;">
-        <h3 style="margin-bottom:10px;">Редактор Шаблона</h3>
+        <h3 style="margin-bottom:8px; font-size:14px;">Редактор Шаблона</h3>
         
         <div class="template-tabs">
           <button class="t-btn active" onclick="selectTemplateDay(1)">Пн</button>
@@ -202,11 +216,10 @@
         </div>
 
         <div id="templateLessonsList"></div>
-        <button class="btn" style="width:100%; margin-top:8px;" onclick="addTemplateLesson()">+ Добавить урок в шаблон</button>
+        <button class="btn" style="width:100%; margin-top:6px;" onclick="addTemplateLesson()">+ Добавить урок в шаблон</button>
 
-        <!-- Кнопки Применения Шаблона -->
-        <div style="margin-top:16px; border-top:1px solid var(--border); padding-top:12px; display:flex; flex-direction:column; gap:6px;">
-          <label style="font-size:12px; font-weight:700;">Применить этот шаблон:</label>
+        <div style="margin-top:12px; border-top:1px solid var(--border); padding-top:8px; display:flex; flex-direction:column; gap:4px;">
+          <label style="font-size:11px; font-weight:700;">Применить этот шаблон:</label>
           <button class="btn btn-success" onclick="applyTemplateRule('all')">Ко всем неделям года</button>
           <button class="btn btn-success" onclick="applyTemplateRule('month')">К текущему месяцу</button>
           <button class="btn btn-success" onclick="applyTemplateRule('selection')">К выделенным дням / месяцам</button>
@@ -216,10 +229,10 @@
 
   </div>
 
-  <!-- Модальное окно выбора цвета -->
+  <!-- Модальное окно цвета -->
   <div class="color-picker-modal" id="colorModal">
     <div class="color-picker-card">
-      <h4 style="text-align:center;">Выберите цвет и сноску</h4>
+      <h4 style="text-align:center; font-size:13px;">Выберите цвет и сноску</h4>
       <div class="color-options">
         <div class="color-circle selected" style="background:#4f46e5" onclick="chooseColor('#4f46e5', this)"></div>
         <div class="color-circle" style="background:#10b981" onclick="chooseColor('#10b981', this)"></div>
@@ -228,8 +241,8 @@
         <div class="color-circle" style="background:#8b5cf6" onclick="chooseColor('#8b5cf6', this)"></div>
         <div class="color-circle" style="background:#ec4899" onclick="chooseColor('#ec4899', this)"></div>
       </div>
-      <input type="text" id="colorLabelInput" placeholder="Введите название (например, 1 Семестр, Каникулы)">
-      <div style="display:flex; gap:8px;">
+      <input type="text" id="colorLabelInput" placeholder="Название (например, 1 Семестр)">
+      <div style="display:flex; gap:6px;">
         <button class="btn" style="flex:1;" onclick="applyColorChoice()">Применить</button>
         <button class="btn" style="flex:1; background:#6c757d;" onclick="closeColorModal()">Отмена</button>
       </div>
@@ -237,9 +250,9 @@
   </div>
 
   <!-- Бэкапы -->
-  <div style="display:flex; justify-content:flex-end; gap:8px;">
-    <button class="btn" style="background:#6c757d; font-size:11px;" onclick="exportData()">💾 Скачать бэкап</button>
-    <button class="btn" style="background:#6c757d; font-size:11px;" onclick="importData()">📂 Загрузить бэкап</button>
+  <div style="display:flex; justify-content:flex-end; gap:6px;">
+    <button class="btn-sm" onclick="exportData()">💾 Скачать бэкап</button>
+    <button class="btn-sm" onclick="importData()">📂 Загрузить бэкап</button>
     <input type="file" id="importInput" style="display:none" onchange="processImport(event)">
   </div>
 
@@ -252,13 +265,13 @@
   let viewMode = 'seasons';
   let mainMode = 'calendar';
   let selectedTemplateDay = 1;
-  let currentScale = 2; // 1 = мелкий, 2 = средний, 3 = крупный
+  let currentScale = 2;
 
   let chosenColorHex = '#4f46e5';
   let selectedItems = new Set();
   let isDragging = false;
 
-  let db = JSON.parse(localStorage.getItem('my_perfect_diary_v5')) || {
+  let db = JSON.parse(localStorage.getItem('my_perfect_diary_v6')) || {
     template: { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 0: [] },
     months: {}, 
     days: {},   
@@ -272,21 +285,44 @@
 
   document.addEventListener('mouseup', () => isDragging = false);
 
+  // Кастомный фон
+  function uploadBackground(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      const imgUrl = event.target.result;
+      document.body.style.backgroundImage = `url('${imgUrl}')`;
+      localStorage.setItem('my_diary_bg', imgUrl);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeBackground() {
+    document.body.style.backgroundImage = 'none';
+    localStorage.removeItem('my_diary_bg');
+  }
+
+  function loadSavedBackground() {
+    const bg = localStorage.getItem('my_diary_bg');
+    if (bg) document.body.style.backgroundImage = `url('${bg}')`;
+  }
+
   function adjustScale(delta) {
     currentScale = Math.max(1, Math.min(3, currentScale + delta));
     const root = document.documentElement;
     if (currentScale === 1) {
-      root.style.setProperty('--month-min-height', '55px');
-      root.style.setProperty('--day-min-height', '36px');
+      root.style.setProperty('--month-min-height', '45px');
+      root.style.setProperty('--day-min-height', '32px');
       root.style.setProperty('--font-scale', '10px');
     } else if (currentScale === 2) {
-      root.style.setProperty('--month-min-height', '75px');
-      root.style.setProperty('--day-min-height', '48px');
+      root.style.setProperty('--month-min-height', '65px');
+      root.style.setProperty('--day-min-height', '42px');
       root.style.setProperty('--font-scale', '12px');
     } else {
-      root.style.setProperty('--month-min-height', '95px');
-      root.style.setProperty('--day-min-height', '60px');
-      root.style.setProperty('--font-scale', '14px');
+      root.style.setProperty('--month-min-height', '85px');
+      root.style.setProperty('--day-min-height', '52px');
+      root.style.setProperty('--font-scale', '13px');
     }
   }
 
@@ -428,9 +464,8 @@
     calculateStats();
   }
 
-  /* Палитра */
   function openColorModal() {
-    if (selectedItems.size === 0) return alert("Выделите мышью элементы для заливки!");
+    if (selectedItems.size === 0) return alert("Выделите элементы мышью!");
     document.getElementById('colorModal').style.display = 'flex';
   }
   function closeColorModal() { document.getElementById('colorModal').style.display = 'none'; }
@@ -455,12 +490,11 @@
     if (viewMode === 'seasons') renderSeasons(); else renderDays();
   }
 
-  /* Логика применения шаблона */
   function applyTemplateRule(rule) {
     const tData = db.template[selectedTemplateDay] || [];
 
     if (rule === 'all') {
-      alert(`Шаблон дня применён ко всем соответствующим дням недели в ${activeYear} году!`);
+      alert(`Шаблон применён ко всем неделям в ${activeYear} году!`);
     } else if (rule === 'month') {
       const daysInMonth = new Date(activeYear, activeMonth + 1, 0).getDate();
       for (let d = 1; d <= daysInMonth; d++) {
@@ -468,9 +502,9 @@
           db.lessons[`${activeYear}-${activeMonth}-${d}`] = JSON.parse(JSON.stringify(tData));
         }
       }
-      alert('Шаблон успешно применён к месяцу!');
+      alert('Шаблон применён к месяцу!');
     } else if (rule === 'selection') {
-      if (selectedItems.size === 0) return alert("Выделите дни на календаре слева!");
+      if (selectedItems.size === 0) return alert("Выделите дни на календаре!");
       selectedItems.forEach(d => {
         db.lessons[`${activeYear}-${activeMonth}-${d}`] = JSON.parse(JSON.stringify(tData));
       });
@@ -499,8 +533,8 @@
           <span style="font-weight:700;">#${idx + 1}</span>
           <input type="text" value="${l.title || ''}" placeholder="Предмет" onchange="updateTemplateLesson(${idx}, 'title', this.value)">
           <input type="text" value="${l.info || ''}" placeholder="Время" onchange="updateTemplateLesson(${idx}, 'info', this.value)">
-          <span style="font-size:11px; color:var(--subtext);">---</span>
-          <span style="font-size:11px; color:var(--subtext);">---</span>
+          <span style="font-size:10px; color:var(--subtext);">---</span>
+          <span style="font-size:10px; color:var(--subtext);">---</span>
           <button class="btn btn-danger" onclick="deleteTemplateLesson(${idx})">✕</button>
         </div>
       `;
@@ -625,27 +659,27 @@
 
     document.getElementById('dayDetailContent').style.display = 'none';
     container.style.display = 'block';
-    container.innerHTML = `<h4 style="margin-bottom:8px;">🔍 Результаты для "${query}":</h4>`;
+    container.innerHTML = `<h4 style="margin-bottom:8px; font-size:12px;">🔍 Результаты для "${query}":</h4>`;
 
     let found = false;
     Object.keys(db.months).forEach(k => {
       if (db.months[k].label && db.months[k].label.toLowerCase().includes(query)) {
         found = true;
-        container.innerHTML += `<div style="padding:6px; background:#f0f3ff; margin-bottom:4px; border-radius:6px;"><b>Месяц:</b> ${k} — ${db.months[k].label}</div>`;
+        container.innerHTML += `<div style="padding:4px; background:rgba(240,243,255,0.9); margin-bottom:4px; border-radius:4px; font-size:11px;"><b>Месяц:</b> ${k} — ${db.months[k].label}</div>`;
       }
     });
 
     Object.keys(db.days).forEach(k => {
       if (db.days[k].label && db.days[k].label.toLowerCase().includes(query)) {
         found = true;
-        container.innerHTML += `<div style="padding:6px; background:#f0f3ff; margin-bottom:4px; border-radius:6px;"><b>День:</b> ${k} — ${db.days[k].label}</div>`;
+        container.innerHTML += `<div style="padding:4px; background:rgba(240,243,255,0.9); margin-bottom:4px; border-radius:4px; font-size:11px;"><b>День:</b> ${k} — ${db.days[k].label}</div>`;
       }
     });
 
-    if (!found) container.innerHTML += `<p style="color:var(--subtext);">Ничего не найдено.</p>`;
+    if (!found) container.innerHTML += `<p style="color:var(--subtext); font-size:11px;">Ничего не найдено.</p>`;
   }
 
-  function saveData() { localStorage.setItem('my_perfect_diary_v5', JSON.stringify(db)); }
+  function saveData() { localStorage.setItem('my_perfect_diary_v6', JSON.stringify(db)); }
   function exportData() {
     const a = document.createElement('a');
     a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
@@ -665,6 +699,7 @@
     r.readAsText(file);
   }
 
+  loadSavedBackground();
   renderSeasons();
 </script>
 
