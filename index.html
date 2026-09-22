@@ -6,75 +6,89 @@
   <title>Персональный Электронный Дневник</title>
   <style>
     :root {
-      --bg: #f3f4f6;
+      --bg: #f0f2f5;
       --card-bg: #ffffff;
-      --text: #1f2937;
-      --subtext: #6b7280;
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --border: #e5e7eb;
-      --radius: 12px;
+      --text: #1c1c1e;
+      --subtext: #6c757d;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --border: #e2e8f0;
+      --radius: 14px;
       --danger: #ef4444;
+
+      /* Цвета сезонов */
+      --winter-bg: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+      --spring-bg: linear-gradient(135deg, #dcfce7 0%, #86efac 100%);
+      --summer-bg: linear-gradient(135deg, #fef9c3 0%, #fde047 100%);
+      --autumn-bg: linear-gradient(135deg, #ffedd5 0%, #fdba74 100%);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; user-select: none; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; user-select: none; }
     body { background-color: var(--bg); color: var(--text); padding: 20px; display: flex; justify-content: center; }
     
-    .app { width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 16px; }
+    .app { width: 100%; max-width: 1280px; display: flex; flex-direction: column; gap: 16px; }
 
-    /* Верхняя панель: Переключатель Года и Поиск */
-    .top-bar { display: flex; gap: 12px; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 12px 20px; border-radius: var(--radius); border: 1px solid var(--border); flex-wrap: wrap; }
-    .year-selector { display: flex; gap: 6px; align-items: center; }
-    .year-btn { padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px; background: #f9fafb; font-weight: 600; cursor: pointer; transition: 0.2s; }
-    .year-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+    /* Переключатель Главных Режимов */
+    .mode-bar { display: flex; background: #e2e8f0; padding: 4px; border-radius: 12px; max-width: 400px; margin: 0 auto; width: 100%; }
+    .mode-btn { flex: 1; padding: 8px 16px; border: none; background: transparent; font-weight: 600; font-size: 13px; color: var(--subtext); border-radius: 9px; cursor: pointer; transition: 0.2s; text-align: center; }
+    .mode-btn.active { background: #ffffff; color: var(--text); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
 
-    .search-box { flex: 1; max-width: 350px; position: relative; }
-    .search-input { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; outline: none; font-size: 14px; }
+    /* Шапка с навигатором бесконечного года */
+    .year-nav-bar { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 12px 20px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+    .year-title { font-size: 22px; font-weight: 800; color: var(--primary); }
+
+    .search-input { padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; width: 260px; outline: none; }
     .search-input:focus { border-color: var(--primary); }
 
-    /* Навигационные крошки */
-    .breadcrumbs { display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--subtext); font-size: 14px; }
-    .crumb { cursor: pointer; }
-    .crumb:hover, .crumb.active { color: var(--primary); }
+    /* Двупанельная структура */
+    .layout-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; }
+    .panel { background: var(--card-bg); border-radius: var(--radius); padding: 20px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
 
-    /* Двупанельный интерфейс */
-    .layout-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 16px; }
-    .panel { background: var(--card-bg); border-radius: var(--radius); padding: 20px; border: 1px solid var(--border); }
+    /* Сезонная Сетка (4 столбика по 3 месяца) */
+    .seasons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .season-column { display: flex; flex-direction: column; gap: 10px; }
+    .season-header { font-size: 13px; font-weight: 700; text-align: center; padding: 6px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .season-winter { background: var(--winter-bg); color: #0369a1; }
+    .season-spring { background: var(--spring-bg); color: #15803d; }
+    .season-summer { background: var(--summer-bg); color: #a16207; }
+    .season-autumn { background: var(--autumn-bg); color: #c2410c; }
 
-    /* Сетка Месяцев и Дней */
-    .months-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .month-card { min-height: 80px; border: 1px solid var(--border); border-radius: 8px; padding: 10px; text-align: center; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: 0.2s; }
-    .month-card:hover { border-color: var(--primary); }
+    .month-card { min-height: 75px; background: #ffffff; border: 1px solid var(--border); border-radius: 10px; padding: 10px; text-align: center; font-weight: 700; font-size: 14px; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: 0.2s; }
+    .month-card:hover { transform: translateY(-2px); border-color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
+    /* Сетка дней внутри месяца */
     .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; }
-    .day-head { font-size: 12px; font-weight: 700; color: var(--subtext); padding-bottom: 4px; }
-    .day-card { min-height: 52px; border: 1px solid var(--border); border-radius: 6px; padding: 4px; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: 0.2s; }
-    .day-card:hover { border-color: var(--primary); }
+    .day-head { font-size: 11px; font-weight: 700; color: var(--subtext); padding-bottom: 4px; }
+    .day-card { min-height: 48px; background: #fafafa; border: 1px solid var(--border); border-radius: 8px; padding: 4px; font-weight: 600; font-size: 12px; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: 0.2s; }
+    .day-card:hover { border-color: var(--primary); transform: scale(1.03); }
     .day-card.active-day { outline: 2px solid var(--primary); }
 
-    .fill-label { font-size: 10px; font-weight: 700; background: rgba(0,0,0,0.25); color: white; padding: 2px 4px; border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .fill-label { font-size: 9px; font-weight: 800; background: rgba(0,0,0,0.3); color: white; padding: 1px 4px; border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* Уроки и Заметки */
-    .lesson-row { display: grid; grid-template-columns: 28px 1fr 1fr 60px 28px; gap: 6px; align-items: center; margin-bottom: 8px; }
+    /* Вкладки дней для Шаблонов */
+    .template-tabs { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 15px; }
+    .t-btn { padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; font-weight: 600; font-size: 12px; cursor: pointer; white-space: nowrap; }
+    .t-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    /* Карточка Урока */
+    .lesson-row { display: grid; grid-template-columns: 24px 1fr 1fr 60px 28px; gap: 6px; align-items: center; margin-bottom: 8px; }
     input, textarea { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; outline: none; }
     input:focus, textarea:focus { border-color: var(--primary); }
-    textarea { height: 100px; resize: none; margin-top: 8px; }
+    textarea { height: 90px; resize: none; margin-top: 6px; }
 
-    .btn { padding: 8px 14px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; }
+    .btn { padding: 8px 14px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: 0.2s; }
     .btn:hover { background: var(--primary-hover); }
     .btn-danger { background: var(--danger); padding: 4px; }
 
-    /* Успеваемость (Средний балл) */
-    .stats-block { margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); }
-    .stat-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
-
     /* Легенда (Сноски) */
-    .legend-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-    .legend-tag { display: flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 16px; font-size: 12px; color: white; font-weight: 600; }
+    .legend-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .legend-tag { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 12px; font-size: 11px; color: white; font-weight: 700; }
 
     .selected-highlight { outline: 3px solid var(--primary) !important; }
 
-    @media (max-width: 850px) {
+    @media (max-width: 900px) {
+      .seasons-grid { grid-template-columns: repeat(2, 1fr); }
       .layout-grid { grid-template-columns: 1fr; }
     }
   </style>
@@ -83,83 +97,96 @@
 
 <div class="app">
 
-  <!-- Шапка: Переключение Года + Поиск -->
-  <div class="top-bar">
-    <div class="year-selector">
-      <span style="font-weight:600; font-size:14px; margin-right:8px;">Учебный год:</span>
-      <button class="year-btn" onclick="selectYear(2025)">2025</button>
-      <button class="year-btn active" onclick="selectYear(2026)">2026</button>
-      <button class="year-btn" onclick="selectYear(2027)">2027</button>
-    </div>
-    <div class="search-box">
-      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск (каникулы, математика, дата...)" oninput="handleSearch()">
-    </div>
+  <!-- Переключатель Режимов -->
+  <div class="mode-bar">
+    <button class="mode-btn active" id="btnModeCalendar" onclick="switchMainMode('calendar')">📅 Дневник и Года</button>
+    <button class="mode-btn" id="btnModeTemplate" onclick="switchMainMode('template')">⚙️ Шаблон Недели</button>
   </div>
 
-  <!-- Хлебные крошки -->
-  <div class="breadcrumbs">
-    <span class="crumb active" id="crumbYear" onclick="setView('year')">🗓️ 2026 Год</span>
-    <span id="sep1" style="display:none;">➔</span>
-    <span class="crumb" id="crumbMonth" style="display:none;" onclick="setView('month')">Месяц</span>
-    <span id="sep2" style="display:none;">➔</span>
-    <span class="crumb" id="crumbDay" style="display:none;">День</span>
+  <!-- Панель бесконечного года -->
+  <div class="year-nav-bar" id="yearNavBar">
+    <button class="btn" onclick="changeYear(-1)">← Прошлый год</button>
+    <div class="year-title" id="displayYearTitle">2026 Год</div>
+    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск по названию, предмету..." oninput="handleSearch()">
+    <button class="btn" onclick="changeYear(1)">Следующий год →</button>
   </div>
 
   <!-- Двупанельный Блок -->
   <div class="layout-grid">
     
-    <!-- Левая панель: Календарь (Год или Месяц) -->
+    <!-- Левая панель: Календарь -->
     <div class="panel">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <h3 id="leftPanelTitle">Обзор Месяцев</h3>
-        <button class="btn" style="font-size:11px; padding:4px 8px;" onclick="colorizeSelected()">🎨 Заливка выбранных</button>
+        <h3 id="leftPanelTitle">Сезоны года</h3>
+        <button class="btn" id="btnFill" style="font-size:11px; padding:4px 8px;" onclick="colorizeSelected()">🎨 Заливка цвет/сноска</button>
       </div>
 
-      <!-- Вид 12 месяцев -->
-      <div id="monthsView" class="months-grid"></div>
+      <!-- Вид 12 месяцев по сезонам -->
+      <div id="seasonsView" class="seasons-grid"></div>
 
       <!-- Вид Дней месяца -->
       <div id="daysView" class="days-grid" style="display:none;"></div>
 
-      <!-- Легенда / Сноски под расписанием -->
-      <div style="margin-top:20px; border-top:1px solid var(--border); padding-top:10px;">
-        <h4 style="font-size:13px; color:var(--subtext);">🏷️ Сноски и категории (Легенда):</h4>
+      <!-- Сноски (Легенда) -->
+      <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:10px;">
+        <h4 style="font-size:12px; color:var(--subtext);">🏷️ Ваши сноски и цвета:</h4>
         <div class="legend-bar" id="legendContainer"></div>
       </div>
     </div>
 
-    <!-- Правая панель: Просмотр дня + Средний балл -->
+    <!-- Правая панель: Просмотр дня / Редактор шаблона -->
     <div class="panel">
-      <h3 id="rightPanelTitle" style="margin-bottom:12px;">Выберите день для просмотра</h3>
-      
-      <div id="dayDetailContent" style="display:none;">
-        <h4>📚 Уроки</h4>
-        <div id="lessonsList" style="margin-top:8px;"></div>
-        <button class="btn" style="width:100%; margin-top:8px;" onclick="addLesson()">+ Добавить урок</button>
+      <!-- Режим Дневника -->
+      <div id="rightDayView">
+        <h3 id="rightPanelTitle" style="margin-bottom:12px;">Выберите день</h3>
+        
+        <div id="dayDetailContent" style="display:none;">
+          <h4>📚 Расписание уроков</h4>
+          <div id="lessonsList" style="margin-top:8px;"></div>
+          <button class="btn" style="width:100%; margin-top:8px;" onclick="addLesson()">+ Добавить урок</button>
 
-        <h4 style="margin-top:16px;">📝 Заметки дня</h4>
-        <textarea id="dayNotes" placeholder="Важные заметки или задачи на этот день..." oninput="saveNotes()"></textarea>
+          <h4 style="margin-top:14px;">📝 Заметки дня</h4>
+          <textarea id="dayNotes" placeholder="Напишите важное..." oninput="saveNotes()"></textarea>
 
-        <!-- Средний балл -->
-        <div class="stats-block">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <h4>📊 Успеваемость</h4>
-            <span style="font-weight:700; font-size:14px;">Общий балл: <b id="totalAvg">0.00</b></span>
+          <!-- Успеваемость -->
+          <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <h4>📊 Успеваемость</h4>
+              <span style="font-weight:700;">Общий балл: <b id="totalAvg">0.00</b></span>
+            </div>
+            <div id="subjectStats" style="font-size:12px; margin-top:6px;"></div>
           </div>
-          <div id="subjectStats"></div>
         </div>
+
+        <div id="searchResults" style="display:none;"></div>
       </div>
 
-      <!-- Результаты поиска (если введён запрос) -->
-      <div id="searchResults" style="display:none;"></div>
+      <!-- Режим Редактирования Шаблона -->
+      <div id="rightTemplateView" style="display:none;">
+        <h3 style="margin-bottom:10px;">Настройка Базовой Недели</h3>
+        <p style="font-size:12px; color:var(--subtext); margin-bottom:12px;">Укажите стандартные уроки для каждого дня недели:</p>
+        
+        <div class="template-tabs">
+          <button class="t-btn active" onclick="selectTemplateDay(1)">Пн</button>
+          <button class="t-btn" onclick="selectTemplateDay(2)">Вт</button>
+          <button class="t-btn" onclick="selectTemplateDay(3)">Ср</button>
+          <button class="t-btn" onclick="selectTemplateDay(4)">Чт</button>
+          <button class="t-btn" onclick="selectTemplateDay(5)">Пт</button>
+          <button class="t-btn" onclick="selectTemplateDay(6)">Сб</button>
+          <button class="t-btn" onclick="selectTemplateDay(0)">Вс</button>
+        </div>
+
+        <div id="templateLessonsList"></div>
+        <button class="btn" style="width:100%; margin-top:8px;" onclick="addTemplateLesson()">+ Добавить урок в шаблон</button>
+      </div>
     </div>
 
   </div>
 
   <!-- Резервное копирование -->
-  <div style="display:flex; justify-content:flex-end; gap:10px;">
-    <button class="btn" style="background:#6b7280; font-size:12px;" onclick="exportData()">💾 Сохранить бэкап</button>
-    <button class="btn" style="background:#6b7280; font-size:12px;" onclick="importData()">📂 Загрузить бэкап</button>
+  <div style="display:flex; justify-content:flex-end; gap:8px;">
+    <button class="btn" style="background:#6c757d; font-size:11px;" onclick="exportData()">💾 Сохранить бэкап</button>
+    <button class="btn" style="background:#6c757d; font-size:11px;" onclick="importData()">📂 Загрузить бэкап</button>
     <input type="file" id="importInput" style="display:none" onchange="processImport(event)">
   </div>
 
@@ -169,17 +196,20 @@
   let activeYear = 2026;
   let activeMonth = 8; // Сентябрь
   let activeDay = 22;
-  let currentView = 'year'; // 'year' или 'month'
+  let viewMode = 'seasons'; // 'seasons' или 'days'
+  let mainMode = 'calendar'; // 'calendar' или 'template'
+  let selectedTemplateDay = 1;
 
   let selectedItems = new Set();
   let isDragging = false;
 
-  let db = JSON.parse(localStorage.getItem('my_advanced_diary_v3')) || {
-    months: {}, // "2026-8": { color: "#2563eb", label: "1 Семестр" }
-    days: {},   // "2026-8-22": { color: "#ef4444", label: "Контрольная" }
-    lessons: {},// "2026-8-22": [ { title, info, mark } ]
-    notes: {},  // "2026-8-22": "Заметка"
-    legend: {}  // "#2563eb": "1 Семестр"
+  let db = JSON.parse(localStorage.getItem('my_ultimate_diary_v4')) || {
+    template: { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 0: [] },
+    months: {}, 
+    days: {},   
+    lessons: {},
+    notes: {},  
+    legend: {}  
   };
 
   const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
@@ -187,68 +217,77 @@
 
   document.addEventListener('mouseup', () => isDragging = false);
 
-  function selectYear(yr) {
-    activeYear = yr;
-    document.querySelectorAll('.year-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.innerText == yr);
-    });
-    document.getElementById('crumbYear').innerText = `🗓️ ${yr} Год`;
-    setView('year');
+  function changeYear(delta) {
+    activeYear += delta;
+    document.getElementById('displayYearTitle').innerText = `${activeYear} Год`;
+    renderSeasons();
   }
 
-  function setView(view) {
-    currentView = view;
-    selectedItems.clear();
+  function switchMainMode(mode) {
+    mainMode = mode;
+    document.getElementById('btnModeCalendar').className = mode === 'calendar' ? 'mode-btn active' : 'mode-btn';
+    document.getElementById('btnModeTemplate').className = mode === 'template' ? 'mode-btn active' : 'mode-btn';
 
-    document.getElementById('monthsView').style.display = view === 'year' ? 'grid' : 'none';
-    document.getElementById('daysView').style.display = view === 'month' ? 'grid' : 'none';
+    document.getElementById('rightDayView').style.display = mode === 'calendar' ? 'block' : 'none';
+    document.getElementById('rightTemplateView').style.display = mode === 'template' ? 'block' : 'none';
 
-    document.getElementById('sep1').style.display = view === 'month' ? 'inline' : 'none';
-    document.getElementById('crumbMonth').style.display = view === 'month' ? 'inline' : 'none';
-
-    if (view === 'year') {
-      document.getElementById('leftPanelTitle').innerText = `Обзор Месяцев (${activeYear})`;
-      renderMonths();
-    } else {
-      document.getElementById('leftPanelTitle').innerText = `${monthNames[activeMonth]} ${activeYear}`;
-      renderDays();
+    if (mode === 'template') {
+      selectTemplateDay(selectedTemplateDay);
     }
+  }
+
+  /* Рендер 4 Сезонов по 3 месяца */
+  function renderSeasons() {
+    viewMode = 'seasons';
+    selectedItems.clear();
+    document.getElementById('seasonsView').style.display = 'grid';
+    document.getElementById('daysView').style.display = 'none';
+    document.getElementById('leftPanelTitle').innerText = `Сезоны ${activeYear} года`;
+
+    const container = document.getElementById('seasonsView');
+    container.innerHTML = '';
+
+    const seasons = [
+      { name: "❄️ Зима", class: "season-winter", months: [11, 0, 1] },
+      { name: "🌱 Весна", class: "season-spring", months: [2, 3, 4] },
+      { name: "☀️ Лето", class: "season-summer", months: [5, 6, 7] },
+      { name: "🍂 Осень", class: "season-autumn", months: [8, 9, 10] }
+    ];
+
+    seasons.forEach(s => {
+      let colHTML = `<div class="season-column"><div class="season-header ${s.class}">${s.name}</div>`;
+      
+      s.months.forEach(mIdx => {
+        const key = `${activeYear}-${mIdx}`;
+        const data = db.months[key] || {};
+        const bgStyle = data.color ? `background-color: ${data.color}; color: white;` : '';
+
+        colHTML += `
+          <div class="month-card" style="${bgStyle}" onmousedown="event.preventDefault(); isDragging=true; toggleSelection(${mIdx}, this)" onmouseenter="if(isDragging) toggleSelection(${mIdx}, this)" onclick="if(!isDragging) openMonth(${mIdx})">
+            <div>${monthNames[mIdx]}</div>
+            ${data.label ? `<div class="fill-label">${data.label}</div>` : ''}
+          </div>
+        `;
+      });
+
+      colHTML += `</div>`;
+      container.innerHTML += colHTML;
+    });
+
     renderLegend();
   }
 
-  /* Рендер Месяцев */
-  function renderMonths() {
-    const container = document.getElementById('monthsView');
-    container.innerHTML = '';
+  function openMonth(mIdx) {
+    activeMonth = mIdx;
+    viewMode = 'days';
+    selectedItems.clear();
+    document.getElementById('seasonsView').style.display = 'none';
+    document.getElementById('daysView').style.display = 'grid';
+    document.getElementById('leftPanelTitle').innerText = `${monthNames[activeMonth]} ${activeYear}`;
 
-    monthNames.forEach((mName, idx) => {
-      const key = `${activeYear}-${idx}`;
-      const data = db.months[key] || {};
-      const bgStyle = data.color ? `background-color: ${data.color}; color: white;` : 'background-color: #fafafa;';
-
-      const card = document.createElement('div');
-      card.className = 'month-card';
-      card.style.cssText = bgStyle;
-      card.innerHTML = `
-        <div>${mName}</div>
-        ${data.label ? `<div class="fill-label">${data.label}</div>` : ''}
-      `;
-
-      card.onmousedown = (e) => { e.preventDefault(); isDragging = true; toggleSelection(idx, card); };
-      card.onmouseenter = () => { if (isDragging) toggleSelection(idx, card); };
-      card.onclick = () => { if (!isDragging) openMonth(idx); };
-
-      container.appendChild(card);
-    });
+    renderDays();
   }
 
-  function openMonth(idx) {
-    activeMonth = idx;
-    document.getElementById('crumbMonth').innerText = monthNames[idx];
-    setView('month');
-  }
-
-  /* Рендер Дней */
   function renderDays() {
     const container = document.getElementById('daysView');
     container.innerHTML = '';
@@ -263,7 +302,7 @@
     for (let day = 1; day <= daysInMonth; day++) {
       const key = `${activeYear}-${activeMonth}-${day}`;
       const data = db.days[key] || {};
-      const bgStyle = data.color ? `background-color: ${data.color}; color: white;` : 'background-color: #fafafa;';
+      const bgStyle = data.color ? `background-color: ${data.color}; color: white;` : '';
       const isActive = (day === activeDay) ? 'active-day' : '';
 
       const card = document.createElement('div');
@@ -284,10 +323,6 @@
 
   function selectDay(day) {
     activeDay = day;
-    document.getElementById('sep2').style.display = 'inline';
-    document.getElementById('crumbDay').style.display = 'inline';
-    document.getElementById('crumbDay').innerText = `${day} ${monthNames[activeMonth]}`;
-
     document.getElementById('rightPanelTitle').innerText = `${activeYear}-${activeMonth + 1}-${day} (${monthNames[activeMonth]})`;
     document.getElementById('dayDetailContent').style.display = 'block';
     document.getElementById('searchResults').style.display = 'none';
@@ -298,7 +333,14 @@
 
   function renderDayDetails() {
     const key = `${activeYear}-${activeMonth}-${activeDay}`;
-    const lessons = db.lessons[key] || [];
+    let lessons = db.lessons[key];
+
+    // Если на день нет отдельной записи, подтягиваем базовый шаблон
+    if (!lessons) {
+      const dayOfWeek = new Date(activeYear, activeMonth, activeDay).getDay();
+      lessons = db.template[dayOfWeek] || [];
+    }
+
     const container = document.getElementById('lessonsList');
     container.innerHTML = '';
 
@@ -318,44 +360,70 @@
     calculateStats();
   }
 
-  function toggleSelection(item, element) {
-    if (selectedItems.has(item)) {
-      selectedItems.delete(item);
-      element.classList.remove('selected-highlight');
-    } else {
-      selectedItems.add(item);
-      element.classList.add('selected-highlight');
+  /* РЕЖИМ ШАБЛОНА */
+  function selectTemplateDay(dNum) {
+    selectedTemplateDay = dNum;
+    const buttons = document.querySelectorAll('.t-btn');
+    const order = [1, 2, 3, 4, 5, 6, 0];
+    buttons.forEach((btn, idx) => btn.className = order[idx] === dNum ? 't-btn active' : 't-btn');
+
+    renderTemplateLessons();
+  }
+
+  function renderTemplateLessons() {
+    const container = document.getElementById('templateLessonsList');
+    container.innerHTML = '';
+    const lessons = db.template[selectedTemplateDay] || [];
+
+    lessons.forEach((l, idx) => {
+      container.innerHTML += `
+        <div class="lesson-row">
+          <span style="font-weight:700;">#${idx + 1}</span>
+          <input type="text" value="${l.title || ''}" placeholder="Предмет" onchange="updateTemplateLesson(${idx}, 'title', this.value)">
+          <input type="text" value="${l.info || ''}" placeholder="Время" onchange="updateTemplateLesson(${idx}, 'info', this.value)">
+          <input type="text" value="" disabled placeholder="---">
+          <button class="btn btn-danger" onclick="deleteTemplateLesson(${idx})">✕</button>
+        </div>
+      `;
+    });
+  }
+
+  function addTemplateLesson() {
+    if (!db.template[selectedTemplateDay]) db.template[selectedTemplateDay] = [];
+    db.template[selectedTemplateDay].push({ title: '', info: '' });
+    saveData();
+    renderTemplateLessons();
+  }
+
+  function updateTemplateLesson(idx, field, val) {
+    db.template[selectedTemplateDay][idx][field] = val;
+    saveData();
+  }
+
+  function deleteTemplateLesson(idx) {
+    db.template[selectedTemplateDay].splice(idx, 1);
+    saveData();
+    renderTemplateLessons();
+  }
+
+  function makeDayCustomIfNeeded() {
+    const key = `${activeYear}-${activeMonth}-${activeDay}`;
+    if (!db.lessons[key]) {
+      const dayOfWeek = new Date(activeYear, activeMonth, activeDay).getDay();
+      db.lessons[key] = JSON.parse(JSON.stringify(db.template[dayOfWeek] || []));
     }
   }
 
-  function colorizeSelected() {
-    if (selectedItems.size === 0) return alert("Выделите мышью блоки для заливки!");
-
-    const color = prompt("Введите цвет в формате HEX (#2563eb - синий, #10b981 - зеленый, #ef4444 - красный, #f59e0b - оранжевый):", "#2563eb");
-    if (!color) return;
-    const label = prompt("Введите сноску / подпись категории (например, 'Летние каникулы', 'Экзамен'):", "Категория");
-
-    selectedItems.forEach(item => {
-      const key = currentView === 'year' ? `${activeYear}-${item}` : `${activeYear}-${activeMonth}-${item}`;
-      const targetObj = currentView === 'year' ? db.months : db.days;
-      targetObj[key] = { color, label };
-    });
-
-    if (label) db.legend[color] = label;
-
-    saveData();
-    setView(currentView);
-  }
-
   function addLesson() {
+    makeDayCustomIfNeeded();
     const key = `${activeYear}-${activeMonth}-${activeDay}`;
-    if (!db.lessons[key]) db.lessons[key] = [];
     db.lessons[key].push({ title: '', info: '', mark: '' });
     saveData();
     renderDayDetails();
   }
 
   function updateLesson(idx, field, val) {
+    makeDayCustomIfNeeded();
     const key = `${activeYear}-${activeMonth}-${activeDay}`;
     db.lessons[key][idx][field] = val;
     saveData();
@@ -363,16 +431,40 @@
   }
 
   function deleteLesson(idx) {
+    makeDayCustomIfNeeded();
     const key = `${activeYear}-${activeMonth}-${activeDay}`;
     db.lessons[key].splice(idx, 1);
     saveData();
     renderDayDetails();
   }
 
-  function saveNotes() {
-    const key = `${activeYear}-${activeMonth}-${activeDay}`;
-    db.notes[key] = document.getElementById('dayNotes').value;
+  function toggleSelection(item, el) {
+    if (selectedItems.has(item)) {
+      selectedItems.delete(item);
+      el.classList.remove('selected-highlight');
+    } else {
+      selectedItems.add(item);
+      el.classList.add('selected-highlight');
+    }
+  }
+
+  function colorizeSelected() {
+    if (selectedItems.size === 0) return alert("Выделите мышью блоки для заливки!");
+
+    const color = prompt("Введите цвет HEX (#4f46e5 - синий, #10b981 - зеленый, #ef4444 - красный, #f59e0b - оранжевый):", "#4f46e5");
+    if (!color) return;
+    const label = prompt("Введите сноску / название периода:", "Категория");
+
+    selectedItems.forEach(item => {
+      const key = viewMode === 'seasons' ? `${activeYear}-${item}` : `${activeYear}-${activeMonth}-${item}`;
+      const targetObj = viewMode === 'seasons' ? db.months : db.days;
+      targetObj[key] = { color, label };
+    });
+
+    if (label) db.legend[color] = label;
+
     saveData();
+    if (viewMode === 'seasons') renderSeasons(); else renderDays();
   }
 
   function calculateStats() {
@@ -399,12 +491,7 @@
     statsContainer.innerHTML = '';
     Object.keys(subjectMap).forEach(sub => {
       const subAvg = (subjectMap[sub].reduce((a,b)=>a+b, 0) / subjectMap[sub].length).toFixed(2);
-      statsContainer.innerHTML += `
-        <div class="stat-row">
-          <span>${sub}</span>
-          <b>${subAvg}</b>
-        </div>
-      `;
+      statsContainer.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>${sub}</span><b>${subAvg}</b></div>`;
     });
   }
 
@@ -412,61 +499,56 @@
     const container = document.getElementById('legendContainer');
     container.innerHTML = '';
     Object.keys(db.legend).forEach(col => {
-      container.innerHTML += `
-        <div class="legend-tag" style="background-color:${col};">
-          <span>${db.legend[col]}</span>
-        </div>
-      `;
+      container.innerHTML += `<div class="legend-tag" style="background-color:${col};"><span>${db.legend[col]}</span></div>`;
     });
+  }
+
+  function saveNotes() {
+    const key = `${activeYear}-${activeMonth}-${activeDay}`;
+    db.notes[key] = document.getElementById('dayNotes').value;
+    saveData();
   }
 
   function handleSearch() {
     const query = document.getElementById('searchInput').value.trim().toLowerCase();
-    const resultsContainer = document.getElementById('searchResults');
+    const container = document.getElementById('searchResults');
 
     if (!query) {
-      resultsContainer.style.display = 'none';
-      if (document.getElementById('crumbDay').style.display !== 'none') {
-        document.getElementById('dayDetailContent').style.display = 'block';
-      }
+      container.style.display = 'none';
+      if (document.getElementById('dayDetailContent').style.display !== 'none') document.getElementById('dayDetailContent').style.display = 'block';
       return;
     }
 
     document.getElementById('dayDetailContent').style.display = 'none';
-    resultsContainer.style.display = 'block';
-    resultsContainer.innerHTML = `<h4>🔍 Результаты для "${query}":</h4>`;
+    container.style.display = 'block';
+    container.innerHTML = `<h4 style="margin-bottom:8px;">🔍 Результаты для "${query}":</h4>`;
 
     let found = false;
-
-    // Поиск по заливкам/сноскам месяцев и дней
     Object.keys(db.months).forEach(k => {
       if (db.months[k].label && db.months[k].label.toLowerCase().includes(query)) {
         found = true;
-        resultsContainer.innerHTML += `<div style="padding:6px; background:#f0f7ff; margin-top:4px; border-radius:6px;"><b>Месяц:</b> ${k} — ${db.months[k].label}</div>`;
+        container.innerHTML += `<div style="padding:6px; background:#f0f3ff; margin-bottom:4px; border-radius:6px;"><b>Месяц:</b> ${k} — ${db.months[k].label}</div>`;
       }
     });
 
     Object.keys(db.days).forEach(k => {
       if (db.days[k].label && db.days[k].label.toLowerCase().includes(query)) {
         found = true;
-        resultsContainer.innerHTML += `<div style="padding:6px; background:#f0f7ff; margin-top:4px; border-radius:6px;"><b>День:</b> ${k} — ${db.days[k].label}</div>`;
+        container.innerHTML += `<div style="padding:6px; background:#f0f3ff; margin-bottom:4px; border-radius:6px;"><b>День:</b> ${k} — ${db.days[k].label}</div>`;
       }
     });
 
-    if (!found) resultsContainer.innerHTML += `<p style="color:var(--subtext); margin-top:8px;">Ничего не найдено.</p>`;
+    if (!found) container.innerHTML += `<p style="color:var(--subtext);">Ничего не найдено.</p>`;
   }
 
-  function saveData() { localStorage.setItem('my_advanced_diary_v3', JSON.stringify(db)); }
-
+  function saveData() { localStorage.setItem('my_ultimate_diary_v4', JSON.stringify(db)); }
   function exportData() {
     const a = document.createElement('a');
     a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
     a.download = `diary_backup.json`;
     a.click();
   }
-
   function importData() { document.getElementById('importInput').click(); }
-
   function processImport(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -474,12 +556,12 @@
     r.onload = function(e) {
       db = JSON.parse(e.target.result);
       saveData();
-      setView('year');
+      renderSeasons();
     };
     r.readAsText(file);
   }
 
-  setView('year');
+  renderSeasons();
 </script>
 
 </body>
