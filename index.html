@@ -53,14 +53,13 @@
 
     .search-input { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 11px; width: 160px; outline: none; background: rgba(255,255,255,0.8); }
 
-    /* Гибкий Двупанельный Блок с разделителем */
+    /* Двупанельный Блок */
     .resizable-container { display: flex; width: 100%; position: relative; gap: 0; }
     .panel { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: var(--radius); padding: 10px; border: 1px solid var(--border); overflow-y: auto; }
     
     .left-panel { width: 320px; min-width: 220px; max-width: 600px; }
     .right-panel { flex: 1; min-width: 300px; }
 
-    /* Разделитель Панелей (Resizer) */
     .resizer { width: 10px; cursor: col-resize; background: transparent; display: flex; align-items: center; justify-content: center; z-index: 10; margin: 0 2px; }
     .resizer::after { content: ""; width: 4px; height: 32px; background: rgba(108, 117, 125, 0.4); border-radius: 2px; transition: 0.2s; }
     .resizer:hover::after, .resizer.dragging::after { background: var(--primary); height: 48px; }
@@ -68,7 +67,7 @@
     .btn-sm { padding: 3px 6px; font-size: 10px; font-weight: 600; border-radius: 5px; border: 1px solid var(--border); background: rgba(248, 250, 252, 0.9); cursor: pointer; }
     .btn-sm:hover { background: #e2e8f0; }
 
-    /* Компактная Сетка Сезонов (2x2) */
+    /* Сетка Сезонов */
     .seasons-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
     .season-column { display: flex; flex-direction: column; gap: 4px; }
     .season-header { font-size: 9px; font-weight: 700; text-align: center; padding: 2px; border-radius: 4px; text-transform: uppercase; }
@@ -262,8 +261,9 @@
     </div>
   </div>
 
-  <!-- Бэкапы -->
-  <div style="display:flex; justify-content:flex-end; gap:4px;">
+  <!-- Управление Памятью и Бэкапами -->
+  <div style="display:flex; justify-content:flex-end; gap:4px; margin-top:4px;">
+    <button class="btn-sm" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;" onclick="clearSiteData()">🗑️ Сброс памяти</button>
     <button class="btn-sm" onclick="exportData()">💾 Скачать бэкап</button>
     <button class="btn-sm" onclick="importData()">📂 Загрузить бэкап</button>
     <input type="file" id="importInput" style="display:none" onchange="processImport(event)">
@@ -284,7 +284,7 @@
   let selectedItems = new Set();
   let isDragging = false;
 
-  let db = JSON.parse(localStorage.getItem('my_perfect_diary_v9')) || {
+  const DEFAULT_DB = {
     template: { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 0: [] },
     months: {}, 
     days: {},   
@@ -293,8 +293,40 @@
     legend: {}  
   };
 
+  let db = loadAndNormalizeData();
+
   const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
   const dayHeaders = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+
+  /* Автоматическая проверка и нормализация бэкапов любого формата */
+  function loadAndNormalizeData() {
+    let raw = localStorage.getItem('my_perfect_diary_v10') || localStorage.getItem('my_perfect_diary_v9') || localStorage.getItem('my_perfect_diary_v8');
+    if (!raw) return JSON.parse(JSON.stringify(DEFAULT_DB));
+
+    try {
+      let parsed = JSON.parse(raw);
+      return {
+        template: parsed.template || DEFAULT_DB.template,
+        months: parsed.months || {},
+        days: parsed.days || {},
+        lessons: parsed.lessons || {},
+        notes: parsed.notes || {},
+        legend: parsed.legend || {}
+      };
+    } catch (e) {
+      return JSON.parse(JSON.stringify(DEFAULT_DB));
+    }
+  }
+
+  function clearSiteData() {
+    if (confirm("Вы уверены, что хотите сбросить память дневника к чистому виду?")) {
+      localStorage.clear();
+      db = JSON.parse(JSON.stringify(DEFAULT_DB));
+      saveData();
+      renderSeasons();
+      alert("Память успешно очищена!");
+    }
+  }
 
   /* Resizer */
   const resizer = document.getElementById('dragResizer');
@@ -722,22 +754,40 @@
     if (!found) container.innerHTML += `<p style="color:var(--subtext); font-size:10px;">Ничего не найдено.</p>`;
   }
 
-  function saveData() { localStorage.setItem('my_perfect_diary_v9', JSON.stringify(db)); }
+  function saveData() { localStorage.setItem('my_perfect_diary_v10', JSON.stringify(db)); }
+  
   function exportData() {
+    const now = new Date();
+    const dateStr = now.toISOString().slice(0,10);
     const a = document.createElement('a');
-    a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
-    a.download = `diary_backup.json`;
+    a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+    a.download = `diary_data_${dateStr}.json`;
     a.click();
   }
+
   function importData() { document.getElementById('importInput').click(); }
+
   function processImport(e) {
     const file = e.target.files[0];
     if (!file) return;
     const r = new FileReader();
     r.onload = function(e) {
-      db = JSON.parse(e.target.result);
-      saveData();
-      renderSeasons();
+      try {
+        let imported = JSON.parse(e.target.result);
+        db = {
+          template: imported.template || DEFAULT_DB.template,
+          months: imported.months || {},
+          days: imported.days || {},
+          lessons: imported.lessons || {},
+          notes: imported.notes || {},
+          legend: imported.legend || {}
+        };
+        saveData();
+        renderSeasons();
+        alert("Бэкап успешно загружен!");
+      } catch (err) {
+        alert("Ошибка формата файла бэкапа!");
+      }
     };
     r.readAsText(file);
   }
