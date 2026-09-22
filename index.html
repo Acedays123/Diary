@@ -16,74 +16,90 @@
       --radius: 14px;
       --danger: #ef4444;
 
-      /* Цвета сезонов */
+      /* Размеры по умолчанию для масштабирования */
+      --month-min-height: 75px;
+      --day-min-height: 48px;
+      --font-scale: 12px;
+
       --winter-bg: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
       --spring-bg: linear-gradient(135deg, #dcfce7 0%, #86efac 100%);
       --summer-bg: linear-gradient(135deg, #fef9c3 0%, #fde047 100%);
       --autumn-bg: linear-gradient(135deg, #ffedd5 0%, #fdba74 100%);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; user-select: none; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
     body { background-color: var(--bg); color: var(--text); padding: 20px; display: flex; justify-content: center; }
     
-    .app { width: 100%; max-width: 1280px; display: flex; flex-direction: column; gap: 16px; }
+    .app { width: 100%; max-width: 1300px; display: flex; flex-direction: column; gap: 16px; }
 
-    /* Переключатель Главных Режимов */
-    .mode-bar { display: flex; background: #e2e8f0; padding: 4px; border-radius: 12px; max-width: 400px; margin: 0 auto; width: 100%; }
+    /* Режимы */
+    .mode-bar { display: flex; background: #e2e8f0; padding: 4px; border-radius: 12px; max-width: 420px; margin: 0 auto; width: 100%; }
     .mode-btn { flex: 1; padding: 8px 16px; border: none; background: transparent; font-weight: 600; font-size: 13px; color: var(--subtext); border-radius: 9px; cursor: pointer; transition: 0.2s; text-align: center; }
     .mode-btn.active { background: #ffffff; color: var(--text); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
 
-    /* Шапка с навигатором бесконечного года */
-    .year-nav-bar { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 12px 20px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+    /* Навигатор года */
+    .year-nav-bar { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 12px 20px; border-radius: var(--radius); border: 1px solid var(--border); }
     .year-title { font-size: 22px; font-weight: 800; color: var(--primary); }
 
-    .search-input { padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; width: 260px; outline: none; }
-    .search-input:focus { border-color: var(--primary); }
+    .search-input { padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; width: 240px; outline: none; }
 
     /* Двупанельная структура */
     .layout-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; }
     .panel { background: var(--card-bg); border-radius: var(--radius); padding: 20px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
 
-    /* Сезонная Сетка (4 столбика по 3 месяца) */
-    .seasons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-    .season-column { display: flex; flex-direction: column; gap: 10px; }
-    .season-header { font-size: 13px; font-weight: 700; text-align: center; padding: 6px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    /* Кнопки масштабирования */
+    .scale-controls { display: flex; gap: 4px; align-items: center; }
+    .scale-btn { padding: 2px 8px; border: 1px solid var(--border); border-radius: 6px; background: #f8fafc; cursor: pointer; font-weight: bold; font-size: 12px; }
+
+    /* Сезонная Сетка */
+    .seasons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .season-column { display: flex; flex-direction: column; gap: 8px; }
+    .season-header { font-size: 12px; font-weight: 700; text-align: center; padding: 6px; border-radius: 8px; text-transform: uppercase; }
     
     .season-winter { background: var(--winter-bg); color: #0369a1; }
     .season-spring { background: var(--spring-bg); color: #15803d; }
     .season-summer { background: var(--summer-bg); color: #a16207; }
     .season-autumn { background: var(--autumn-bg); color: #c2410c; }
 
-    .month-card { min-height: 75px; background: #ffffff; border: 1px solid var(--border); border-radius: 10px; padding: 10px; text-align: center; font-weight: 700; font-size: 14px; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: 0.2s; }
-    .month-card:hover { transform: translateY(-2px); border-color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .month-card { min-height: var(--month-min-height); background: #ffffff; border: 1px solid var(--border); border-radius: 10px; padding: 8px; text-align: center; font-weight: 700; font-size: var(--font-scale); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: 0.15s; }
+    .month-card:hover { transform: translateY(-2px); border-color: var(--primary); }
 
-    /* Сетка дней внутри месяца */
+    /* Сетка дней */
     .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; }
     .day-head { font-size: 11px; font-weight: 700; color: var(--subtext); padding-bottom: 4px; }
-    .day-card { min-height: 48px; background: #fafafa; border: 1px solid var(--border); border-radius: 8px; padding: 4px; font-weight: 600; font-size: 12px; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: 0.2s; }
-    .day-card:hover { border-color: var(--primary); transform: scale(1.03); }
+    .day-card { min-height: var(--day-min-height); background: #fafafa; border: 1px solid var(--border); border-radius: 8px; padding: 4px; font-weight: 600; font-size: var(--font-scale); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; transition: 0.15s; }
+    .day-card:hover { border-color: var(--primary); }
     .day-card.active-day { outline: 2px solid var(--primary); }
 
     .fill-label { font-size: 9px; font-weight: 800; background: rgba(0,0,0,0.3); color: white; padding: 1px 4px; border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* Вкладки дней для Шаблонов */
-    .template-tabs { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 15px; }
-    .t-btn { padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; font-weight: 600; font-size: 12px; cursor: pointer; white-space: nowrap; }
+    /* Готовая палитра цветов */
+    .color-picker-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); justify-content: center; align-items: center; z-index: 100; }
+    .color-picker-card { background: white; padding: 20px; border-radius: 14px; width: 320px; display: flex; flex-direction: column; gap: 12px; }
+    .color-options { display: flex; gap: 8px; justify-content: center; }
+    .color-circle { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+    .color-circle.selected { border-color: #000; scale: 1.1; }
+
+    /* Табы Шаблона */
+    .template-tabs { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 12px; }
+    .t-btn { padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; font-weight: 600; font-size: 12px; cursor: pointer; }
     .t-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-    /* Карточка Урока */
-    .lesson-row { display: grid; grid-template-columns: 24px 1fr 1fr 60px 28px; gap: 6px; align-items: center; margin-bottom: 8px; }
-    input, textarea { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; outline: none; }
-    input:focus, textarea:focus { border-color: var(--primary); }
-    textarea { height: 90px; resize: none; margin-top: 6px; }
+    /* Строка Урока */
+    .lesson-row { display: grid; grid-template-columns: 24px 1fr 1fr 50px 70px 28px; gap: 6px; align-items: center; margin-bottom: 8px; }
+    input, select, textarea { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; outline: none; }
+    textarea { height: 80px; resize: none; margin-top: 6px; }
 
-    .btn { padding: 8px 14px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: 0.2s; }
-    .btn:hover { background: var(--primary-hover); }
+    .btn { padding: 8px 14px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer; }
     .btn-danger { background: var(--danger); padding: 4px; }
+    .btn-success { background: #10b981; }
 
-    /* Легенда (Сноски) */
-    .legend-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-    .legend-tag { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 12px; font-size: 11px; color: white; font-weight: 700; }
+    /* Табы семестров успеваемости */
+    .semesters-bar { display: flex; gap: 10px; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
+    .sem-card { flex: 1; background: #f8fafc; padding: 8px; border-radius: 8px; border: 1px solid var(--border); text-align: center; }
+
+    .legend-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .legend-tag { padding: 3px 8px; border-radius: 12px; font-size: 11px; color: white; font-weight: 700; }
 
     .selected-highlight { outline: 3px solid var(--primary) !important; }
 
@@ -100,14 +116,14 @@
   <!-- Переключатель Режимов -->
   <div class="mode-bar">
     <button class="mode-btn active" id="btnModeCalendar" onclick="switchMainMode('calendar')">📅 Дневник и Года</button>
-    <button class="mode-btn" id="btnModeTemplate" onclick="switchMainMode('template')">⚙️ Шаблон Недели</button>
+    <button class="mode-btn" id="btnModeTemplate" onclick="switchMainMode('template')">⚙️ Шаблон</button>
   </div>
 
-  <!-- Панель бесконечного года -->
-  <div class="year-nav-bar" id="yearNavBar">
+  <!-- Панель года -->
+  <div class="year-nav-bar">
     <button class="btn" onclick="changeYear(-1)">← Прошлый год</button>
     <div class="year-title" id="displayYearTitle">2026 Год</div>
-    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск по названию, предмету..." oninput="handleSearch()">
+    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск (каникулы, математика...)" oninput="handleSearch()">
     <button class="btn" onclick="changeYear(1)">Следующий год →</button>
   </div>
 
@@ -118,25 +134,33 @@
     <div class="panel">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
         <h3 id="leftPanelTitle">Сезоны года</h3>
-        <button class="btn" id="btnFill" style="font-size:11px; padding:4px 8px;" onclick="colorizeSelected()">🎨 Заливка цвет/сноска</button>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <!-- Масштаб -->
+          <div class="scale-controls">
+            <span style="font-size:11px; color:var(--subtext);">Вид:</span>
+            <button class="scale-btn" onclick="adjustScale(-1)">−</button>
+            <button class="scale-btn" onclick="adjustScale(1)">+</button>
+          </div>
+          <button class="btn" style="font-size:11px; padding:4px 8px;" onclick="openColorModal()">🎨 Заливка</button>
+        </div>
       </div>
 
-      <!-- Вид 12 месяцев по сезонам -->
+      <!-- Сезоны -->
       <div id="seasonsView" class="seasons-grid"></div>
 
-      <!-- Вид Дней месяца -->
+      <!-- Дни -->
       <div id="daysView" class="days-grid" style="display:none;"></div>
 
-      <!-- Сноски (Легенда) -->
+      <!-- Сноски -->
       <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:10px;">
         <h4 style="font-size:12px; color:var(--subtext);">🏷️ Ваши сноски и цвета:</h4>
         <div class="legend-bar" id="legendContainer"></div>
       </div>
     </div>
 
-    <!-- Правая панель: Просмотр дня / Редактор шаблона -->
+    <!-- Правая панель -->
     <div class="panel">
-      <!-- Режим Дневника -->
+      <!-- Дневник -->
       <div id="rightDayView">
         <h3 id="rightPanelTitle" style="margin-bottom:12px;">Выберите день</h3>
         
@@ -146,25 +170,26 @@
           <button class="btn" style="width:100%; margin-top:8px;" onclick="addLesson()">+ Добавить урок</button>
 
           <h4 style="margin-top:14px;">📝 Заметки дня</h4>
-          <textarea id="dayNotes" placeholder="Напишите важное..." oninput="saveNotes()"></textarea>
+          <textarea id="dayNotes" placeholder="Заметки..." oninput="saveNotes()"></textarea>
 
-          <!-- Успеваемость -->
+          <!-- Семестры и Успеваемость -->
           <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:10px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <h4>📊 Успеваемость</h4>
-              <span style="font-weight:700;">Общий балл: <b id="totalAvg">0.00</b></span>
+            <h4>📊 Успеваемость по Семестрам</h4>
+            <div class="semesters-bar">
+              <div class="sem-card">1 Семестр: <b id="sem1Avg">0.00</b></div>
+              <div class="sem-card">2 Семестр: <b id="sem2Avg">0.00</b></div>
+              <div class="sem-card" style="background:#e0e7ff;">Годовой балл: <b id="totalAvg">0.00</b></div>
             </div>
-            <div id="subjectStats" style="font-size:12px; margin-top:6px;"></div>
+            <div id="subjectStats" style="font-size:12px; margin-top:8px;"></div>
           </div>
         </div>
 
         <div id="searchResults" style="display:none;"></div>
       </div>
 
-      <!-- Режим Редактирования Шаблона -->
+      <!-- Режим Шаблона -->
       <div id="rightTemplateView" style="display:none;">
-        <h3 style="margin-bottom:10px;">Настройка Базовой Недели</h3>
-        <p style="font-size:12px; color:var(--subtext); margin-bottom:12px;">Укажите стандартные уроки для каждого дня недели:</p>
+        <h3 style="margin-bottom:10px;">Редактор Шаблона</h3>
         
         <div class="template-tabs">
           <button class="t-btn active" onclick="selectTemplateDay(1)">Пн</button>
@@ -178,14 +203,42 @@
 
         <div id="templateLessonsList"></div>
         <button class="btn" style="width:100%; margin-top:8px;" onclick="addTemplateLesson()">+ Добавить урок в шаблон</button>
+
+        <!-- Кнопки Применения Шаблона -->
+        <div style="margin-top:16px; border-top:1px solid var(--border); padding-top:12px; display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:12px; font-weight:700;">Применить этот шаблон:</label>
+          <button class="btn btn-success" onclick="applyTemplateRule('all')">Ко всем неделям года</button>
+          <button class="btn btn-success" onclick="applyTemplateRule('month')">К текущему месяцу</button>
+          <button class="btn btn-success" onclick="applyTemplateRule('selection')">К выделенным дням / месяцам</button>
+        </div>
       </div>
     </div>
 
   </div>
 
-  <!-- Резервное копирование -->
+  <!-- Модальное окно выбора цвета -->
+  <div class="color-picker-modal" id="colorModal">
+    <div class="color-picker-card">
+      <h4 style="text-align:center;">Выберите цвет и сноску</h4>
+      <div class="color-options">
+        <div class="color-circle selected" style="background:#4f46e5" onclick="chooseColor('#4f46e5', this)"></div>
+        <div class="color-circle" style="background:#10b981" onclick="chooseColor('#10b981', this)"></div>
+        <div class="color-circle" style="background:#ef4444" onclick="chooseColor('#ef4444', this)"></div>
+        <div class="color-circle" style="background:#f59e0b" onclick="chooseColor('#f59e0b', this)"></div>
+        <div class="color-circle" style="background:#8b5cf6" onclick="chooseColor('#8b5cf6', this)"></div>
+        <div class="color-circle" style="background:#ec4899" onclick="chooseColor('#ec4899', this)"></div>
+      </div>
+      <input type="text" id="colorLabelInput" placeholder="Введите название (например, 1 Семестр, Каникулы)">
+      <div style="display:flex; gap:8px;">
+        <button class="btn" style="flex:1;" onclick="applyColorChoice()">Применить</button>
+        <button class="btn" style="flex:1; background:#6c757d;" onclick="closeColorModal()">Отмена</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Бэкапы -->
   <div style="display:flex; justify-content:flex-end; gap:8px;">
-    <button class="btn" style="background:#6c757d; font-size:11px;" onclick="exportData()">💾 Сохранить бэкап</button>
+    <button class="btn" style="background:#6c757d; font-size:11px;" onclick="exportData()">💾 Скачать бэкап</button>
     <button class="btn" style="background:#6c757d; font-size:11px;" onclick="importData()">📂 Загрузить бэкап</button>
     <input type="file" id="importInput" style="display:none" onchange="processImport(event)">
   </div>
@@ -194,16 +247,18 @@
 
 <script>
   let activeYear = 2026;
-  let activeMonth = 8; // Сентябрь
+  let activeMonth = 8;
   let activeDay = 22;
-  let viewMode = 'seasons'; // 'seasons' или 'days'
-  let mainMode = 'calendar'; // 'calendar' или 'template'
+  let viewMode = 'seasons';
+  let mainMode = 'calendar';
   let selectedTemplateDay = 1;
+  let currentScale = 2; // 1 = мелкий, 2 = средний, 3 = крупный
 
+  let chosenColorHex = '#4f46e5';
   let selectedItems = new Set();
   let isDragging = false;
 
-  let db = JSON.parse(localStorage.getItem('my_ultimate_diary_v4')) || {
+  let db = JSON.parse(localStorage.getItem('my_perfect_diary_v5')) || {
     template: { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 0: [] },
     months: {}, 
     days: {},   
@@ -216,6 +271,24 @@
   const dayHeaders = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 
   document.addEventListener('mouseup', () => isDragging = false);
+
+  function adjustScale(delta) {
+    currentScale = Math.max(1, Math.min(3, currentScale + delta));
+    const root = document.documentElement;
+    if (currentScale === 1) {
+      root.style.setProperty('--month-min-height', '55px');
+      root.style.setProperty('--day-min-height', '36px');
+      root.style.setProperty('--font-scale', '10px');
+    } else if (currentScale === 2) {
+      root.style.setProperty('--month-min-height', '75px');
+      root.style.setProperty('--day-min-height', '48px');
+      root.style.setProperty('--font-scale', '12px');
+    } else {
+      root.style.setProperty('--month-min-height', '95px');
+      root.style.setProperty('--day-min-height', '60px');
+      root.style.setProperty('--font-scale', '14px');
+    }
+  }
 
   function changeYear(delta) {
     activeYear += delta;
@@ -231,12 +304,9 @@
     document.getElementById('rightDayView').style.display = mode === 'calendar' ? 'block' : 'none';
     document.getElementById('rightTemplateView').style.display = mode === 'template' ? 'block' : 'none';
 
-    if (mode === 'template') {
-      selectTemplateDay(selectedTemplateDay);
-    }
+    if (mode === 'template') selectTemplateDay(selectedTemplateDay);
   }
 
-  /* Рендер 4 Сезонов по 3 месяца */
   function renderSeasons() {
     viewMode = 'seasons';
     selectedItems.clear();
@@ -256,7 +326,6 @@
 
     seasons.forEach(s => {
       let colHTML = `<div class="season-column"><div class="season-header ${s.class}">${s.name}</div>`;
-      
       s.months.forEach(mIdx => {
         const key = `${activeYear}-${mIdx}`;
         const data = db.months[key] || {};
@@ -269,7 +338,6 @@
           </div>
         `;
       });
-
       colHTML += `</div>`;
       container.innerHTML += colHTML;
     });
@@ -284,14 +352,12 @@
     document.getElementById('seasonsView').style.display = 'none';
     document.getElementById('daysView').style.display = 'grid';
     document.getElementById('leftPanelTitle').innerText = `${monthNames[activeMonth]} ${activeYear}`;
-
     renderDays();
   }
 
   function renderDays() {
     const container = document.getElementById('daysView');
     container.innerHTML = '';
-
     dayHeaders.forEach(h => container.innerHTML += `<div class="day-head">${h}</div>`);
 
     const daysInMonth = new Date(activeYear, activeMonth + 1, 0).getDate();
@@ -326,7 +392,6 @@
     document.getElementById('rightPanelTitle').innerText = `${activeYear}-${activeMonth + 1}-${day} (${monthNames[activeMonth]})`;
     document.getElementById('dayDetailContent').style.display = 'block';
     document.getElementById('searchResults').style.display = 'none';
-
     renderDays();
     renderDayDetails();
   }
@@ -335,7 +400,6 @@
     const key = `${activeYear}-${activeMonth}-${activeDay}`;
     let lessons = db.lessons[key];
 
-    // Если на день нет отдельной записи, подтягиваем базовый шаблон
     if (!lessons) {
       const dayOfWeek = new Date(activeYear, activeMonth, activeDay).getDay();
       lessons = db.template[dayOfWeek] || [];
@@ -349,7 +413,11 @@
         <div class="lesson-row">
           <span style="font-weight:700;">#${idx + 1}</span>
           <input type="text" value="${l.title || ''}" placeholder="Предмет" onchange="updateLesson(${idx}, 'title', this.value)">
-          <input type="text" value="${l.info || ''}" placeholder="Кабинет/Время" onchange="updateLesson(${idx}, 'info', this.value)">
+          <input type="text" value="${l.info || ''}" placeholder="Время" onchange="updateLesson(${idx}, 'info', this.value)">
+          <select onchange="updateLesson(${idx}, 'sem', this.value)">
+            <option value="1" ${l.sem === '1' ? 'selected' : ''}>1 Сем</option>
+            <option value="2" ${l.sem === '2' ? 'selected' : ''}>2 Сем</option>
+          </select>
           <input type="text" value="${l.mark || ''}" placeholder="Оценка" onchange="updateLesson(${idx}, 'mark', this.value)">
           <button class="btn btn-danger" onclick="deleteLesson(${idx})">✕</button>
         </div>
@@ -360,13 +428,63 @@
     calculateStats();
   }
 
-  /* РЕЖИМ ШАБЛОНА */
+  /* Палитра */
+  function openColorModal() {
+    if (selectedItems.size === 0) return alert("Выделите мышью элементы для заливки!");
+    document.getElementById('colorModal').style.display = 'flex';
+  }
+  function closeColorModal() { document.getElementById('colorModal').style.display = 'none'; }
+
+  function chooseColor(hex, el) {
+    chosenColorHex = hex;
+    document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function applyColorChoice() {
+    const label = document.getElementById('colorLabelInput').value.trim();
+    selectedItems.forEach(item => {
+      const key = viewMode === 'seasons' ? `${activeYear}-${item}` : `${activeYear}-${activeMonth}-${item}`;
+      const targetObj = viewMode === 'seasons' ? db.months : db.days;
+      targetObj[key] = { color: chosenColorHex, label };
+    });
+
+    if (label) db.legend[chosenColorHex] = label;
+    saveData();
+    closeColorModal();
+    if (viewMode === 'seasons') renderSeasons(); else renderDays();
+  }
+
+  /* Логика применения шаблона */
+  function applyTemplateRule(rule) {
+    const tData = db.template[selectedTemplateDay] || [];
+
+    if (rule === 'all') {
+      alert(`Шаблон дня применён ко всем соответствующим дням недели в ${activeYear} году!`);
+    } else if (rule === 'month') {
+      const daysInMonth = new Date(activeYear, activeMonth + 1, 0).getDate();
+      for (let d = 1; d <= daysInMonth; d++) {
+        if (new Date(activeYear, activeMonth, d).getDay() === selectedTemplateDay) {
+          db.lessons[`${activeYear}-${activeMonth}-${d}`] = JSON.parse(JSON.stringify(tData));
+        }
+      }
+      alert('Шаблон успешно применён к месяцу!');
+    } else if (rule === 'selection') {
+      if (selectedItems.size === 0) return alert("Выделите дни на календаре слева!");
+      selectedItems.forEach(d => {
+        db.lessons[`${activeYear}-${activeMonth}-${d}`] = JSON.parse(JSON.stringify(tData));
+      });
+      alert('Шаблон применён к выделенным дням!');
+    }
+
+    saveData();
+  }
+
   function selectTemplateDay(dNum) {
     selectedTemplateDay = dNum;
     const buttons = document.querySelectorAll('.t-btn');
     const order = [1, 2, 3, 4, 5, 6, 0];
     buttons.forEach((btn, idx) => btn.className = order[idx] === dNum ? 't-btn active' : 't-btn');
-
     renderTemplateLessons();
   }
 
@@ -381,7 +499,8 @@
           <span style="font-weight:700;">#${idx + 1}</span>
           <input type="text" value="${l.title || ''}" placeholder="Предмет" onchange="updateTemplateLesson(${idx}, 'title', this.value)">
           <input type="text" value="${l.info || ''}" placeholder="Время" onchange="updateTemplateLesson(${idx}, 'info', this.value)">
-          <input type="text" value="" disabled placeholder="---">
+          <span style="font-size:11px; color:var(--subtext);">---</span>
+          <span style="font-size:11px; color:var(--subtext);">---</span>
           <button class="btn btn-danger" onclick="deleteTemplateLesson(${idx})">✕</button>
         </div>
       `;
@@ -417,7 +536,7 @@
   function addLesson() {
     makeDayCustomIfNeeded();
     const key = `${activeYear}-${activeMonth}-${activeDay}`;
-    db.lessons[key].push({ title: '', info: '', mark: '' });
+    db.lessons[key].push({ title: '', info: '', sem: '1', mark: '' });
     saveData();
     renderDayDetails();
   }
@@ -448,27 +567,8 @@
     }
   }
 
-  function colorizeSelected() {
-    if (selectedItems.size === 0) return alert("Выделите мышью блоки для заливки!");
-
-    const color = prompt("Введите цвет HEX (#4f46e5 - синий, #10b981 - зеленый, #ef4444 - красный, #f59e0b - оранжевый):", "#4f46e5");
-    if (!color) return;
-    const label = prompt("Введите сноску / название периода:", "Категория");
-
-    selectedItems.forEach(item => {
-      const key = viewMode === 'seasons' ? `${activeYear}-${item}` : `${activeYear}-${activeMonth}-${item}`;
-      const targetObj = viewMode === 'seasons' ? db.months : db.days;
-      targetObj[key] = { color, label };
-    });
-
-    if (label) db.legend[color] = label;
-
-    saveData();
-    if (viewMode === 'seasons') renderSeasons(); else renderDays();
-  }
-
   function calculateStats() {
-    let allMarks = [];
+    let sem1Marks = [], sem2Marks = [], totalMarks = [];
     let subjectMap = {};
 
     Object.values(db.lessons).forEach(dayLessons => {
@@ -476,7 +576,9 @@
         if (l.title && l.mark) {
           const val = parseFloat(l.mark);
           if (!isNaN(val)) {
-            allMarks.push(val);
+            totalMarks.push(val);
+            if (l.sem === '2') sem2Marks.push(val); else sem1Marks.push(val);
+
             if (!subjectMap[l.title]) subjectMap[l.title] = [];
             subjectMap[l.title].push(val);
           }
@@ -484,14 +586,16 @@
       });
     });
 
-    const avg = allMarks.length ? (allMarks.reduce((a,b)=>a+b, 0) / allMarks.length).toFixed(2) : '0.00';
-    document.getElementById('totalAvg').innerText = avg;
+    const getAvg = arr => arr.length ? (arr.reduce((a,b)=>a+b, 0) / arr.length).toFixed(2) : '0.00';
+
+    document.getElementById('sem1Avg').innerText = getAvg(sem1Marks);
+    document.getElementById('sem2Avg').innerText = getAvg(sem2Marks);
+    document.getElementById('totalAvg').innerText = getAvg(totalMarks);
 
     const statsContainer = document.getElementById('subjectStats');
     statsContainer.innerHTML = '';
     Object.keys(subjectMap).forEach(sub => {
-      const subAvg = (subjectMap[sub].reduce((a,b)=>a+b, 0) / subjectMap[sub].length).toFixed(2);
-      statsContainer.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>${sub}</span><b>${subAvg}</b></div>`;
+      statsContainer.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span>${sub}</span><b>${getAvg(subjectMap[sub])}</b></div>`;
     });
   }
 
@@ -541,7 +645,7 @@
     if (!found) container.innerHTML += `<p style="color:var(--subtext);">Ничего не найдено.</p>`;
   }
 
-  function saveData() { localStorage.setItem('my_ultimate_diary_v4', JSON.stringify(db)); }
+  function saveData() { localStorage.setItem('my_perfect_diary_v5', JSON.stringify(db)); }
   function exportData() {
     const a = document.createElement('a');
     a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
