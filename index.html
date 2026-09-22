@@ -3,223 +3,130 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Персональный Электронный Дневник</title>
+  <title>Электронный Дневник</title>
   <style>
     :root {
-      --primary: #4f46e5;
-      --primary-hover: #4338ca;
-      --bg: #f3f4f6;
+      --bg: #f2f4f7;
       --card-bg: #ffffff;
-      --text: #1f2937;
-      --border: #e5e7eb;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --success: #10b981;
+      --text: #1c1c1e;
+      --subtext: #8e8e93;
+      --primary: #007aff;
+      --primary-light: #e5f1ff;
+      --danger: #ff3b30;
+      --border: #e5e5ea;
+      --radius: 14px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding: 20px; }
-    .container { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 340px 1fr; gap: 20px; }
-
-    /* Боковая панель */
-    .sidebar { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); height: fit-content; }
-    .nav-tabs { display: flex; gap: 5px; margin-bottom: 15px; }
-    .nav-tab { flex: 1; padding: 10px; text-align: center; background: #e5e7eb; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
-    .nav-tab.active { background: var(--primary); color: white; }
-
-    .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
-    .calendar-day-head { font-weight: bold; font-size: 11px; color: #6b7280; padding: 4px 0; }
-    .calendar-day { padding: 8px 0; font-size: 13px; border-radius: 6px; cursor: pointer; border: 1px solid transparent; }
-    .calendar-day:hover { background: #e0e7ff; }
-    .calendar-day.active { background: var(--primary); color: white; font-weight: bold; }
-    .calendar-day.customized { border-bottom: 3px solid var(--warning); }
-
-    /* Поиск */
-    .search-box { margin-bottom: 15px; }
-    .search-input { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
-
-    /* Годовой обзор */
-    .year-view-container { display: flex; flex-direction: column; gap: 20px; }
-    .year-block { border: 1px solid var(--border); border-radius: 8px; padding: 15px; background: #fafafa; }
-    .year-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; }
-    .months-grid { display: grid; grid-template-columns: repeat( auto-fill, minmax(130px, 1fr) ); gap: 10px; }
-    .month-card { background: white; border: 1px solid var(--border); border-radius: 6px; padding: 10px; cursor: pointer; text-align: center; font-size: 13px; font-weight: 600; transition: 0.2s; }
-    .month-card:hover { border-color: var(--primary); background: #f0f3ff; }
-
-    /* Дни недели в редакторе шаблонов */
-    .days-tabs-bar { display: flex; gap: 6px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 4px; }
-    .day-tab-btn { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; background: #f9fafb; cursor: pointer; font-weight: 600; font-size: 13px; white-space: nowrap; }
-    .day-tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-
-    /* Выделения / Группы */
-    .groups-manager { margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px; }
-    .group-tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 12px; font-size: 12px; color: white; font-weight: bold; margin-right: 5px; margin-bottom: 5px; cursor: pointer; }
-
-    /* Аналитика */
-    .analytics { margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px; }
-    .stat-card { background: #f9fafb; padding: 10px; border-radius: 8px; margin-top: 8px; }
-    .subject-avg { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
-
-    /* Основной блок */
-    .main-content { background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-    .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 20px 10px; display: flex; justify-content: center; }
     
-    .status-badge { font-size: 12px; padding: 4px 8px; border-radius: 4px; font-weight: 600; }
-    .badge-template { background: #e0e7ff; color: #3730a3; }
-    .badge-custom { background: #fef3c7; color: #92400e; }
+    .app { width: 100%; max-width: 800px; display: flex; flex-direction: column; gap: 16px; }
 
-    .lesson-card { 
-      display: grid; 
-      grid-template-columns: 40px 1.5fr 1fr 2fr 100px 40px; 
-      gap: 10px; 
-      align-items: center; 
-      background: #f9fafb; 
-      padding: 12px; 
-      border-radius: 8px; 
-      margin-bottom: 10px; 
-      border: 1px solid var(--border);
-    }
+    /* Переключатель режимов */
+    .segmented-control { display: flex; background: #e3e3e8; padding: 4px; border-radius: 12px; }
+    .segment-btn { flex: 1; padding: 10px; text-align: center; border: none; background: transparent; font-weight: 600; font-size: 14px; color: var(--subtext); border-radius: 9px; cursor: pointer; transition: 0.2s; }
+    .segment-btn.active { background: #ffffff; color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
 
-    input { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; }
-    input:focus { outline: 2px solid var(--primary); border-color: transparent; }
+    /* Главные карточки */
+    .card { background: var(--card-bg); border-radius: var(--radius); padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid var(--border); }
 
-    .btn { padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; }
-    .btn:hover { background: var(--primary-hover); }
-    .btn-danger { background: var(--danger); padding: 8px; }
-    .btn-warning { background: var(--warning); color: white; }
-    .btn-success { background: var(--success); color: white; }
-    .btn-secondary { background: #6b7280; }
+    /* Компактный календарь недели */
+    .week-bar { display: flex; justify-content: space-between; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+    .week-day { flex: 1; min-width: 45px; text-align: center; padding: 10px 4px; border-radius: 10px; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
+    .week-day .day-name { font-size: 11px; color: var(--subtext); font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+    .week-day .day-num { font-size: 16px; font-weight: 700; }
+    .week-day:hover { background: #f0f0f5; }
+    .week-day.active { background: var(--primary); color: white; }
+    .week-day.active .day-name { color: rgba(255,255,255,0.8); }
 
-    .apply-bar { display: flex; gap: 8px; background: #f3f4f6; padding: 12px; border-radius: 8px; margin-bottom: 15px; align-items: center; flex-wrap: wrap; }
-    .apply-bar label { font-weight: 600; font-size: 13px; color: #4b5563; }
+    /* Карточка урока */
+    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .title { font-size: 20px; font-weight: 700; }
 
-    .tools { margin-top: 20px; display: flex; gap: 10px; border-top: 1px solid var(--border); padding-top: 15px; flex-wrap: wrap; }
+    .lesson-item { display: grid; grid-template-columns: 28px 1.5fr 1fr 2fr 70px 32px; gap: 8px; align-items: center; background: #f9f9fb; padding: 10px 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid var(--border); }
+    .lesson-num { font-weight: 700; color: var(--subtext); font-size: 13px; text-align: center; }
 
-    /* Результаты поиска */
-    .search-results-list { display: flex; flex-direction: column; gap: 10px; }
-    .search-item { background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; }
-    .search-item:hover { border-color: var(--primary); }
+    input { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; background: white; outline: none; transition: 0.2s; }
+    input:focus { border-color: var(--primary); }
 
-    @media (max-width: 900px) {
-      .container { grid-template-columns: 1fr; }
-      .lesson-card { grid-template-columns: 1fr; gap: 8px; }
+    /* Кнопки */
+    .btn-icon { background: transparent; border: none; color: var(--subtext); cursor: pointer; font-size: 16px; padding: 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+    .btn-icon:hover { color: var(--danger); background: #ffe5e5; }
+    .btn-add { width: 100%; padding: 12px; background: var(--primary-light); color: var(--primary); border: none; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; margin-top: 8px; transition: 0.2s; }
+    .btn-add:hover { background: #d0e4ff; }
+
+    /* Успеваемость */
+    .stats-row { display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; }
+    .badge { background: var(--primary); color: white; padding: 4px 10px; border-radius: 20px; font-size: 14px; }
+
+    /* Фильтры и инструменты */
+    .footer-tools { display: flex; justify-content: space-between; font-size: 12px; color: var(--subtext); margin-top: 10px; }
+    .text-btn { background: none; border: none; color: var(--subtext); cursor: pointer; font-size: 12px; text-decoration: underline; }
+
+    @media (max-width: 650px) {
+      .lesson-item { grid-template-columns: 1fr; gap: 6px; }
+      .lesson-num { text-align: left; }
     }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <!-- Боковая панель -->
-  <div class="sidebar">
-    <!-- Поиск по всему дневнику -->
-    <div class="search-box">
-      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск по предмету, дате, теме..." oninput="handleSearch()">
+<div class="app">
+
+  <!-- Шапка с переключателем -->
+  <div class="segmented-control">
+    <button class="segment-btn active" id="btnModeCalendar" onclick="setMode('calendar')">📅 Дневник</button>
+    <button class="segment-btn" id="btnModeTemplate" onclick="setMode('template')">⚙️ Шаблон Недели</button>
+  </div>
+
+  <!-- Недельный Календарь (для Дневника) -->
+  <div class="card" id="weekBarCard">
+    <div class="week-bar" id="weekBar"></div>
+  </div>
+
+  <!-- Выбор дня недели (для Шаблона) -->
+  <div class="card" id="templateDaysCard" style="display: none;">
+    <div class="week-bar" id="templateWeekBar"></div>
+  </div>
+
+  <!-- Основная карточка урока -->
+  <div class="card">
+    <div class="header-row">
+      <div class="title" id="displayTitle">Понедельник</div>
+      <div id="statBadge" class="badge">0.00</div>
     </div>
 
-    <div class="nav-tabs">
-      <div class="nav-tab active" id="tabCalendar" onclick="switchMode('calendar')">📅 Дневник</div>
-      <div class="nav-tab" id="tabYears" onclick="switchMode('years')">🗓️ Года</div>
-      <div class="nav-tab" id="tabTemplate" onclick="switchMode('template')">⚙️ Шаблон</div>
-    </div>
+    <div id="lessonsList"></div>
 
-    <!-- Виджет: Календарь Месяца -->
-    <div id="calendarView">
-      <div class="calendar-header">
-        <button class="btn btn-secondary" onclick="changeMonth(-1)">&lt;</button>
-        <h3 id="monthTitle">Месяц Год</h3>
-        <button class="btn btn-secondary" onclick="changeMonth(1)">&gt;</button>
-      </div>
-      <div class="calendar-grid" id="calendarGrid"></div>
-    </div>
+    <button class="btn-add" onclick="addLesson()">+ Добавить урок</button>
+  </div>
 
-    <!-- Менеджер Выделений / Категорий -->
-    <div class="groups-manager">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <h4 style="font-size: 14px;">🏷️ Группы и Метки</h4>
-        <button class="btn btn-secondary" style="padding: 2px 6px; font-size: 11px;" onclick="createNewGroup()">+</button>
-      </div>
-      <div id="groupsList"></div>
-    </div>
-
-    <!-- Аналитика -->
-    <div class="analytics">
-      <h4>📊 Успеваемость</h4>
-      <div class="stat-card">
-        <div>Общий средний балл: <b id="totalAvg">0.00</b></div>
-      </div>
-      <div id="subjectStats" style="margin-top: 10px;"></div>
+  <!-- Панель управления данными -->
+  <div class="footer-tools">
+    <span>Данные сохраняются автоматически</span>
+    <div>
+      <button class="text-btn" onclick="exportBackup()">Экспорт</button> | 
+      <button class="text-btn" onclick="importBackup()">Импорт</button>
+      <input type="file" id="fileInput" style="display:none" onchange="readBackup(event)">
     </div>
   </div>
 
-  <!-- Главная зона -->
-  <div class="main-content">
-    
-    <!-- Переключатель дней недели (в Шаблоне) -->
-    <div class="days-tabs-bar" id="daysTabsBar" style="display: none;">
-      <button class="day-tab-btn active" onclick="selectTemplateDay(1)">Понедельник</button>
-      <button class="day-tab-btn" onclick="selectTemplateDay(2)">Вторник</button>
-      <button class="day-tab-btn" onclick="selectTemplateDay(3)">Среда</button>
-      <button class="day-tab-btn" onclick="selectTemplateDay(4)">Четверг</button>
-      <button class="day-tab-btn" onclick="selectTemplateDay(5)">Пятница</button>
-      <button class="day-tab-btn" onclick="selectTemplateDay(6)">Суббота</button>
-      <button class="day-tab-btn" onclick="selectTemplateDay(0)">Воскресенье</button>
-    </div>
-
-    <div class="header-actions" id="mainHeaderActions">
-      <div>
-        <h2 id="selectedDateTitle">Расписание</h2>
-        <span id="dayStatusBadge" class="status-badge badge-template">Шаблон недели</span>
-      </div>
-      <div style="display: flex; gap: 8px;">
-        <button class="btn btn-warning" id="resetBtn" onclick="resetDayToTemplate()" style="display:none;">Сбросить к шаблону</button>
-        <button class="btn" id="addLessonBtn" onclick="addLesson()">+ Добавить урок</button>
-      </div>
-    </div>
-
-    <!-- Панель «Применить к» в режиме шаблона -->
-    <div class="apply-bar" id="applyBar" style="display: none;">
-      <label>Применить этот день шаблона:</label>
-      <button class="btn btn-success" onclick="applyTemplate('all')">Ко всем дням</button>
-      <button class="btn btn-success" onclick="applyTemplate('month')">К текущему месяцу</button>
-      <button class="btn btn-success" onclick="applyTemplate('week')">К этой неделе</button>
-      <button class="btn btn-success" onclick="applyTemplate('specific')">К определённому дню</button>
-    </div>
-
-    <!-- Раздел с уроками -->
-    <div id="lessonsContainer"></div>
-
-    <!-- Раздел для многолетнего обзора (скрыт по умолчанию) -->
-    <div id="yearsContainer" style="display: none;" class="year-view-container"></div>
-
-    <!-- Раздел результатов поиска (скрыт по умолчанию) -->
-    <div id="searchResultsContainer" style="display: none;" class="search-results-list"></div>
-
-    <div class="tools">
-      <button class="btn btn-secondary" onclick="exportData()">💾 Экспорт (JSON)</button>
-      <button class="btn btn-secondary" onclick="importData()">📂 Импорт</button>
-      <input type="file" id="importFile" style="display:none" onchange="processImport(event)">
-    </div>
-  </div>
 </div>
 
 <script>
-  let mode = 'calendar'; // 'calendar', 'years', 'template', 'search'
+  let mode = 'calendar'; // 'calendar' или 'template'
   let currentDate = new Date();
   let selectedDateStr = formatDate(new Date());
-  let selectedTemplateDay = 1;
+  let selectedTemplateDay = 1; // 1 = Пн
 
-  let db = JSON.parse(localStorage.getItem('my_personal_diary_v6')) || {
-    weeklyTemplate: { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 0: [] },
-    customDays: {},
-    groups: [
-      { id: '1', name: '1 Семестр', color: '#4f46e5' },
-      { id: '2', name: 'Подготовка к экзаменам', color: '#ef4444' }
-    ]
+  // Хранилище данных
+  let db = JSON.parse(localStorage.getItem('my_clean_diary')) || {
+    template: { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 0: [] },
+    days: {}
   };
 
-  const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
-  const weekDays = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
+  const dayNames = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+  const fullDayNames = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
 
   function formatDate(d) {
     let month = '' + (d.getMonth() + 1);
@@ -230,416 +137,187 @@
     return [year, month, day].join('-');
   }
 
-  function getDayOfWeek(dateStr) {
-    const parts = dateStr.split('-');
-    return new Date(parts[0], parts[1] - 1, parts[2]).getDay();
-  }
-
-  function isCustomized(dateStr) {
-    return db.customDays.hasOwnProperty(dateStr);
-  }
-
-  function switchMode(newMode) {
+  function setMode(newMode) {
     mode = newMode;
-    document.getElementById('tabCalendar').className = mode === 'calendar' ? 'nav-tab active' : 'nav-tab';
-    document.getElementById('tabYears').className = mode === 'years' ? 'nav-tab active' : 'nav-tab';
-    document.getElementById('tabTemplate').className = mode === 'template' ? 'nav-tab active' : 'nav-tab';
+    document.getElementById('btnModeCalendar').className = mode === 'calendar' ? 'segment-btn active' : 'segment-btn';
+    document.getElementById('btnModeTemplate').className = mode === 'template' ? 'segment-btn active' : 'segment-btn';
 
-    document.getElementById('calendarView').style.display = mode === 'calendar' ? 'block' : 'none';
-    document.getElementById('daysTabsBar').style.display = mode === 'template' ? 'flex' : 'none';
-    document.getElementById('applyBar').style.display = mode === 'template' ? 'flex' : 'none';
-    
-    document.getElementById('lessonsContainer').style.display = (mode === 'calendar' || mode === 'template') ? 'block' : 'none';
-    document.getElementById('yearsContainer').style.display = mode === 'years' ? 'flex' : 'none';
-    document.getElementById('searchResultsContainer').style.display = mode === 'search' ? 'flex' : 'none';
-    document.getElementById('mainHeaderActions').style.display = mode === 'search' ? 'none' : 'flex';
+    document.getElementById('weekBarCard').style.display = mode === 'calendar' ? 'block' : 'none';
+    document.getElementById('templateDaysCard').style.display = mode === 'template' ? 'block' : 'none';
 
     if (mode === 'calendar') {
-      selectDate(selectedDateStr);
-    } else if (mode === 'years') {
-      renderYearsView();
-    } else if (mode === 'template') {
-      selectTemplateDay(selectedTemplateDay);
-    }
-  }
-
-  function renderGroupsList() {
-    const container = document.getElementById('groupsList');
-    container.innerHTML = '';
-    db.groups.forEach(group => {
-      container.innerHTML += `
-        <span class="group-tag" style="background-color: ${group.color};" onclick="filterByGroup('${group.name}')">
-          ${group.name}
-        </span>
-      `;
-    });
-  }
-
-  function createNewGroup() {
-    const name = prompt("Введите название новой группы/выделения (например, 'Каникулы'):");
-    if (!name) return;
-    const colors = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-    
-    db.groups.push({ id: Date.now().toString(), name, color: randomColor });
-    saveData();
-    renderGroupsList();
-  }
-
-  function renderYearsView() {
-    const container = document.getElementById('yearsContainer');
-    container.innerHTML = '';
-
-    const currentYear = currentDate.getFullYear();
-    const yearsToDisplay = [currentYear, currentYear + 1, currentYear + 2];
-
-    yearsToDisplay.forEach(year => {
-      let monthsHTML = '';
-      monthNames.forEach((mName, idx) => {
-        monthsHTML += `
-          <div class="month-card" onclick="goToSpecificMonth(${year}, ${idx})">
-            ${mName}
-          </div>
-        `;
-      });
-
-      container.innerHTML += `
-        <div class="year-block">
-          <div class="year-title">
-            <span>📅 ${year} год</span>
-          </div>
-          <div class="months-grid">
-            ${monthsHTML}
-          </div>
-        </div>
-      `;
-    });
-  }
-
-  function goToSpecificMonth(year, monthIdx) {
-    currentDate.setFullYear(year);
-    currentDate.setMonth(monthIdx);
-    switchMode('calendar');
-  }
-
-  function handleSearch() {
-    const query = document.getElementById('searchInput').value.trim().toLowerCase();
-    if (!query) {
-      if (mode === 'search') switchMode('calendar');
-      return;
-    }
-
-    switchMode('search');
-    const container = document.getElementById('searchResultsContainer');
-    container.innerHTML = `<h3 style="margin-bottom:10px;">Результаты поиска: "${query}"</h3>`;
-
-    let matches = [];
-
-    // Поиск по дням с уроками
-    Object.keys(db.customDays).forEach(dateStr => {
-      if (dateStr.includes(query)) {
-        matches.push({ dateStr, text: `Дата: ${dateStr}` });
-      }
-      db.customDays[dateStr].forEach(lesson => {
-        if ((lesson.title && lesson.title.toLowerCase().includes(query)) ||
-            (lesson.hw && lesson.hw.toLowerCase().includes(query)) ||
-            (lesson.info && lesson.info.toLowerCase().includes(query))) {
-          matches.push({ dateStr, text: `${dateStr} — ${lesson.title || 'Урок'}: ${lesson.hw || lesson.info || ''}` });
-        }
-      });
-    });
-
-    if (matches.length === 0) {
-      container.innerHTML += `<p style="color:#6b7280;">Ничего не найдено.</p>`;
+      renderWeekBar();
+      loadDay(selectedDateStr);
     } else {
-      matches.forEach(item => {
-        container.innerHTML += `
-          <div class="search-item" onclick="selectDate('${item.dateStr}'); switchMode('calendar');">
-            ${item.text}
-          </div>
-        `;
-      });
+      renderTemplateWeekBar();
+      loadTemplateDay(selectedTemplateDay);
     }
   }
 
-  function filterByGroup(groupName) {
-    document.getElementById('searchInput').value = groupName;
-    handleSearch();
-  }
+  /* Отрисовка текущей недели */
+  function renderWeekBar() {
+    const bar = document.getElementById('weekBar');
+    bar.innerHTML = '';
 
-  function selectTemplateDay(dayNum) {
-    selectedTemplateDay = dayNum;
-    const buttons = document.querySelectorAll('.day-tab-btn');
-    const dayIndices = [1, 2, 3, 4, 5, 6, 0];
-    buttons.forEach((btn, idx) => {
-      btn.className = dayIndices[idx] === dayNum ? 'day-tab-btn active' : 'day-tab-btn';
-    });
+    const curr = new Date(selectedDateStr);
+    const first = curr.getDate() - curr.getDay() + 1; // Понедельник недели
 
-    document.getElementById('selectedDateTitle').innerText = `Шаблон: ${weekDays[dayNum]}`;
-    const badge = document.getElementById('dayStatusBadge');
-    badge.innerText = "Редактирование базового шаблона";
-    badge.className = "status-badge badge-template";
-    document.getElementById('resetBtn').style.display = "none";
-
-    renderLessons();
-  }
-
-  function initCalendar() {
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-    
-    document.getElementById('monthTitle').innerText = `${monthNames[month]} ${year}`;
-    
-    const grid = document.getElementById('calendarGrid');
-    grid.innerHTML = '';
-
-    const daysHead = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-    daysHead.forEach(d => grid.innerHTML += `<div class="calendar-day-head">${d}</div>`);
-
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    
-    let startingIndex = firstDay === 0 ? 6 : firstDay - 1;
-
-    for (let i = 0; i < startingIndex; i++) {
-      grid.innerHTML += `<div></div>`;
-    }
-
-    for (let day = 1; day <= daysInMonth; day++) {
-      const dateObj = new Date(year, month, day);
-      const dateStr = formatDate(dateObj);
-      
+    for (let i = 0; i < 7; i++) {
+      const day = new Date(curr.setDate(first + i));
+      const dateStr = formatDate(day);
       const isSelected = dateStr === selectedDateStr ? 'active' : '';
-      const isCustom = isCustomized(dateStr) ? 'customized' : '';
 
-      grid.innerHTML += `
-        <div class="calendar-day ${isSelected} ${isCustom}" onclick="selectDate('${dateStr}')">
-          ${day}
+      bar.innerHTML += `
+        <div class="week-day ${isSelected}" onclick="selectDate('${dateStr}')">
+          <div class="day-name">${dayNames[day.getDay()]}</div>
+          <div class="day-num">${day.getDate()}</div>
         </div>
       `;
     }
   }
 
-  function changeMonth(delta) {
-    currentDate.setMonth(currentDate.getMonth() + delta);
-    initCalendar();
+  /* Отрисовка шаблона по дням недели */
+  function renderTemplateWeekBar() {
+    const bar = document.getElementById('templateWeekBar');
+    bar.innerHTML = '';
+
+    const daysOrder = [1, 2, 3, 4, 5, 6, 0];
+    daysOrder.forEach(dNum => {
+      const isSelected = dNum === selectedTemplateDay ? 'active' : '';
+      bar.innerHTML += `
+        <div class="week-day ${isSelected}" onclick="selectTemplateDay(${dNum})">
+          <div class="day-name">${dayNames[dNum]}</div>
+        </div>
+      `;
+    });
   }
 
   function selectDate(dateStr) {
     selectedDateStr = dateStr;
-    const dayOfWeek = getDayOfWeek(dateStr);
-    
-    document.getElementById('selectedDateTitle').innerText = `${selectedDateStr} (${weekDays[dayOfWeek]})`;
-    
-    const badge = document.getElementById('dayStatusBadge');
-    const resetBtn = document.getElementById('resetBtn');
+    renderWeekBar();
+    loadDay(dateStr);
+  }
 
-    if (isCustomized(dateStr)) {
-      badge.innerText = "Изменен вручную";
-      badge.className = "status-badge badge-custom";
-      resetBtn.style.display = "inline-block";
+  function selectTemplateDay(dNum) {
+    selectedTemplateDay = dNum;
+    renderTemplateWeekBar();
+    loadTemplateDay(dNum);
+  }
+
+  function getLessons() {
+    if (mode === 'template') {
+      return db.template[selectedTemplateDay] || [];
     } else {
-      badge.innerText = "Основное расписание недели";
-      badge.className = "status-badge badge-template";
-      resetBtn.style.display = "none";
+      if (db.days[selectedDateStr]) {
+        return db.days[selectedDateStr];
+      }
+      const dayOfWeek = new Date(selectedDateStr).getDay();
+      return db.template[dayOfWeek] || [];
     }
+  }
 
-    initCalendar();
+  function loadDay(dateStr) {
+    const d = new Date(dateStr);
+    document.getElementById('displayTitle').innerText = `${selectedDateStr} (${fullDayNames[d.getDay()]})`;
     renderLessons();
   }
 
-  function getCurrentLessons() {
-    if (mode === 'template') {
-      return db.weeklyTemplate[selectedTemplateDay] || [];
-    } else {
-      if (isCustomized(selectedDateStr)) {
-        return db.customDays[selectedDateStr];
-      }
-      const dayOfWeek = getDayOfWeek(selectedDateStr);
-      return db.weeklyTemplate[dayOfWeek] || [];
-    }
+  function loadTemplateDay(dNum) {
+    document.getElementById('displayTitle').innerText = `Шаблон: ${fullDayNames[dNum]}`;
+    renderLessons();
   }
 
   function renderLessons() {
-    const container = document.getElementById('lessonsContainer');
+    const container = document.getElementById('lessonsList');
     container.innerHTML = '';
-
-    const lessons = getCurrentLessons();
+    const lessons = getLessons();
 
     if (lessons.length === 0) {
-      container.innerHTML = `<p style="color: #9ca3af; text-align: center; padding: 20px;">На этот день нет уроков. Нажмите "+ Добавить урок".</p>`;
+      container.innerHTML = `<p style="color: var(--subtext); text-align: center; padding: 20px;">Уроков нет</p>`;
     }
 
-    lessons.forEach((lesson, index) => {
+    lessons.forEach((l, idx) => {
       container.innerHTML += `
-        <div class="lesson-card">
-          <span style="font-weight: bold; text-align: center;">#${index + 1}</span>
-          <input type="text" value="${lesson.title || ''}" placeholder="Предмет" onchange="updateLesson(${index}, 'title', this.value)">
-          <input type="text" value="${lesson.info || ''}" placeholder="Время / Кабинет" onchange="updateLesson(${index}, 'info', this.value)">
-          <input type="text" value="${lesson.hw || ''}" placeholder="Домашнее задание" onchange="updateLesson(${index}, 'hw', this.value)">
-          <input type="text" value="${lesson.mark || ''}" placeholder="Оценка" onchange="updateLesson(${index}, 'mark', this.value)">
-          <button class="btn btn-danger" onclick="deleteLesson(${index})">✕</button>
+        <div class="lesson-item">
+          <span class="lesson-num">#${idx + 1}</span>
+          <input type="text" value="${l.title || ''}" placeholder="Предмет" onchange="updateLesson(${idx}, 'title', this.value)">
+          <input type="text" value="${l.info || ''}" placeholder="Кабинет / Время" onchange="updateLesson(${idx}, 'info', this.value)">
+          <input type="text" value="${l.hw || ''}" placeholder="Домашнее задание" onchange="updateLesson(${idx}, 'hw', this.value)">
+          <input type="text" value="${l.mark || ''}" placeholder="Оценка" onchange="updateLesson(${idx}, 'mark', this.value)">
+          <button class="btn-icon" onclick="deleteLesson(${idx})">✕</button>
         </div>
       `;
     });
 
-    calculateAnalytics();
+    calculateAvg();
   }
 
-  function applyTemplate(type) {
-    const currentTemplate = JSON.parse(JSON.stringify(db.weeklyTemplate[selectedTemplateDay] || []));
-
-    if (type === 'all') {
-      Object.keys(db.customDays).forEach(dateStr => {
-        if (getDayOfWeek(dateStr) === selectedTemplateDay) {
-          delete db.customDays[dateStr];
-        }
-      });
-      alert(`Шаблон применён ко всем дням!`);
-    } else if (type === 'month') {
-      const year = currentDate.getFullYear();
-      const month = currentDate.getMonth();
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-      for (let day = 1; day <= daysInMonth; day++) {
-        const d = new Date(year, month, day);
-        if (d.getDay() === selectedTemplateDay) {
-          db.customDays[formatDate(d)] = JSON.parse(JSON.stringify(currentTemplate));
-        }
-      }
-      alert(`Шаблон применён к месяцу!`);
-    } else if (type === 'specific') {
-      const targetDateStr = prompt("Введите дату в формате ГГГГ-ММ-ДД:", selectedDateStr);
-      if (targetDateStr) {
-        db.customDays[targetDateStr] = JSON.parse(JSON.stringify(currentTemplate));
-        alert(`Шаблон применён к ${targetDateStr}!`);
-      }
-    }
-    saveData();
-  }
-
-  function makeDateCustomIfNeeded() {
-    if (mode === 'calendar' && !isCustomized(selectedDateStr)) {
-      const dayOfWeek = getDayOfWeek(selectedDateStr);
-      db.customDays[selectedDateStr] = JSON.parse(JSON.stringify(db.weeklyTemplate[dayOfWeek] || []));
+  function makeCustomIfNeeded() {
+    if (mode === 'calendar' && !db.days[selectedDateStr]) {
+      const dayOfWeek = new Date(selectedDateStr).getDay();
+      db.days[selectedDateStr] = JSON.parse(JSON.stringify(db.template[dayOfWeek] || []));
     }
   }
 
   function addLesson() {
-    if (mode === 'template') {
-      if (!db.weeklyTemplate[selectedTemplateDay]) db.weeklyTemplate[selectedTemplateDay] = [];
-      db.weeklyTemplate[selectedTemplateDay].push({ title: '', info: '', hw: '', mark: '' });
-    } else {
-      makeDateCustomIfNeeded();
-      db.customDays[selectedDateStr].push({ title: '', info: '', hw: '', mark: '' });
-    }
-    saveData();
+    makeCustomIfNeeded();
+    const target = mode === 'template' ? db.template[selectedTemplateDay] : db.days[selectedDateStr];
+    target.push({ title: '', info: '', hw: '', mark: '' });
+    save();
   }
 
-  function updateLesson(index, field, value) {
-    if (mode === 'template') {
-      db.weeklyTemplate[selectedTemplateDay][index][field] = value;
-    } else {
-      makeDateCustomIfNeeded();
-      db.customDays[selectedDateStr][index][field] = value;
-    }
-    saveData();
+  function updateLesson(idx, field, val) {
+    makeCustomIfNeeded();
+    const target = mode === 'template' ? db.template[selectedTemplateDay] : db.days[selectedDateStr];
+    target[idx][field] = val;
+    save();
   }
 
-  function deleteLesson(index) {
-    if (mode === 'template') {
-      db.weeklyTemplate[selectedTemplateDay].splice(index, 1);
-    } else {
-      makeDateCustomIfNeeded();
-      db.customDays[selectedDateStr].splice(index, 1);
-    }
-    saveData();
+  function deleteLesson(idx) {
+    makeCustomIfNeeded();
+    const target = mode === 'template' ? db.template[selectedTemplateDay] : db.days[selectedDateStr];
+    target.splice(idx, 1);
+    save();
   }
 
-  function resetDayToTemplate() {
-    if (confirm("Сбросить изменения для этого дня?")) {
-      delete db.customDays[selectedDateStr];
-      saveData();
-    }
+  function save() {
+    localStorage.setItem('my_clean_diary', JSON.stringify(db));
+    renderLessons();
   }
 
-  function saveData() {
-    localStorage.setItem('my_personal_diary_v6', JSON.stringify(db));
-    if (mode === 'calendar') {
-      selectDate(selectedDateStr);
-    } else if (mode === 'template') {
-      selectTemplateDay(selectedTemplateDay);
-    }
-  }
-
-  function calculateAnalytics() {
-    let totalMarks = [];
-    let subjectMarks = {};
-
-    Object.values(db.customDays).forEach(dayLessons => {
-      dayLessons.forEach(lesson => {
-        if (lesson.title && lesson.mark) {
-          const numMark = parseFloat(lesson.mark);
-          if (!isNaN(numMark)) {
-            totalMarks.push(numMark);
-            if (!subjectMarks[lesson.title]) subjectMarks[lesson.title] = [];
-            subjectMarks[lesson.title].push(numMark);
-          }
-        }
+  function calculateAvg() {
+    let marks = [];
+    Object.values(db.days).forEach(day => {
+      day.forEach(l => {
+        const m = parseFloat(l.mark);
+        if (!isNaN(m)) marks.push(m);
       });
     });
-
-    const totalAvg = totalMarks.length ? (totalMarks.reduce((a, b) => a + b, 0) / totalMarks.length).toFixed(2) : '0.00';
-    document.getElementById('totalAvg').innerText = totalAvg;
-
-    const subjectStatsContainer = document.getElementById('subjectStats');
-    subjectStatsContainer.innerHTML = '';
-
-    Object.keys(subjectMarks).forEach(sub => {
-      const avg = (subjectMarks[sub].reduce((a, b) => a + b, 0) / subjectMarks[sub].length).toFixed(2);
-      subjectStatsContainer.innerHTML += `
-        <div class="subject-avg">
-          <span>${sub}</span>
-          <b>${avg}</b>
-        </div>
-      `;
-    });
+    const avg = marks.length ? (marks.reduce((a, b) => a + b, 0) / marks.length).toFixed(2) : '0.00';
+    document.getElementById('statBadge').innerText = `Средний балл: ${avg}`;
   }
 
-  function exportData() {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", `diary_backup_${selectedDateStr}.json`);
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
+  function exportBackup() {
+    const a = document.createElement('a');
+    a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+    a.download = `diary_backup.json`;
+    a.click();
   }
 
-  function importData() {
-    document.getElementById('importFile').click();
-  }
+  function importBackup() { document.getElementById('fileInput').click(); }
 
-  function processImport(e) {
+  function readBackup(e) {
     const file = e.target.files[0];
     if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      try {
-        db = JSON.parse(e.target.result);
-        saveData();
-        renderGroupsList();
-        alert('Данные успешно импортированы!');
-      } catch (err) {
-        alert('Ошибка файла.');
-      }
+    const r = new FileReader();
+    r.onload = function(e) {
+      db = JSON.parse(e.target.result);
+      save();
     };
-    reader.readAsText(file);
+    r.readAsText(file);
   }
 
-  renderGroupsList();
-  selectDate(selectedDateStr);
+  setMode('calendar');
 </script>
 
 </body>
